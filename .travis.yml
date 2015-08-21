@@ -1,15 +1,13 @@
 language: go
-
 go:
-	- 1.4
-	- 1.5
+  - 1.4
+  - 1.5
 
 services:
-	- redis-server
+  - redis-server
 
 install:
-	- go get -v ./...
-	- go get github.com/stretchr/testify/assert
-
+  - go get -v ./...
+  - go get github.com/stretchr/testify/assert
 script:
-	- go test ./...
+  - go test ./...
