@@ -19,6 +19,7 @@
 					progress: 90,
 					estimate: 25
 				},
+
 				2: {
                     key: 'The key of the job (generated when create new job)',
                     name: 'The name of job',
@@ -26,6 +27,7 @@
                     progress: 0,
                     estimate: 0
                 }
+                ...
             }
 			}
 		}
@@ -142,7 +144,7 @@
 
 1. HTTP
 
-		DELETE /v1/job/<key> HTTP/1.1
+		POST /v1/job/<key> HTTP/1.1
 		
 2. Input Example
 
