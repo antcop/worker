@@ -32,7 +32,6 @@ import (
 	"github.com/epinion-online-research/ant-worker/manager"
 	"sync"
 	"github.com/epinion-online-research/ant-worker/api"
-	"time"
 
 )
 
@@ -71,21 +70,7 @@ func main() {
 
 
 	//Start monitoring input from services
-	//go manager.Monitor()
-
-	go func() {
-		for {
-			select {
-			case msg := <- manager.Observer :
-				go func() {
-					println("Wowwwwwww")
-					time.Sleep( 1 * time.Second )
-					println( msg )
-				}()
-
-			}
-		}
-	}()
+	manager.Monitor()
 
 
 	wg.Wait()

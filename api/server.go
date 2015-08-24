@@ -57,7 +57,6 @@ func ( rest *RestServer ) Start(){
 	}()
 }
 
-
 func ( rest *RestServer ) Stop(){
 
 }

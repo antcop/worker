@@ -40,7 +40,22 @@ type JobManager struct {
 
 
 func (manager *JobManager ) ExampleAction(){
+	manager.Observer <- "Example action executed"
+}
 
+
+func (manager *JobManager ) Monitor(){
+	go func() {
+		for {
+			select {
+			case msg := <- manager.Observer :
+				go func() {
+					println( msg )
+				}()
+
+			}
+		}
+	}()
 }
 
 /*
@@ -50,9 +65,6 @@ func (manager *JobManager) Init(){
 }
 
 
-func (manager *JobManager ) Monitor(){
-
-}
 
 
 func( manager *JobManager ) NewJob( ){

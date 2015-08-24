@@ -40,7 +40,7 @@ type Router struct {
 
 }
 
-func (router *Router ) Init ( ret *RestServer  ){
+func (router *Router ) Init ( rest *RestServer  ){
 	router.engine = gin.Default()
 	router.rest = rest
 	//router.observer = observer
@@ -57,7 +57,8 @@ func (router *Router) RegisterJobs( ) {
 			//Notify channel
 			println(" Before.............");
 
-			router.rest.JobManager.Observer <- "Pingggggggggg"
+			//router.rest.JobManager.Observer <- "Pingggggggggg"
+			router.rest.JobManager.ExampleAction();
 
 			//router.rest.JobManager.Observer <- "Pingggggggggggggggggggg"
 			//println( <- router.rest.JobManager.Observer );
