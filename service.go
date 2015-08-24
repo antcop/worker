@@ -29,7 +29,7 @@
 package main
 
 import (
-	//"github.com/epinion-online-research/ant-worker/manager"
+	"github.com/epinion-online-research/ant-worker/manager"
 	"sync"
 	"github.com/epinion-online-research/ant-worker/api"
 	"time"
@@ -42,16 +42,19 @@ func main() {
 	wg.Add( 1 )
 
 	//JobManager
-	//manager := manager.JobManager{}
+	manager := manager.JobManager{
+		Observer: make( chan string ),
+	}
+
 	//manager.Init()
 
-	observer := make( chan string )
+	//observer := make( chan string )
 
 	//Rest Service
 	rs := api.RestServer  {
 		Port: "2345",
-		//JobManager: &manager,
-		Observer: observer,
+		JobManager: &manager,
+		//Observer: observer,
 	}
 
 	rs.Start()
@@ -73,10 +76,10 @@ func main() {
 	go func() {
 		for {
 			select {
-			case msg := <- observer :
+			case msg := <- manager.Observer :
 				go func() {
 					println("Wowwwwwww")
-					time.Sleep( 10 * time.Second )
+					time.Sleep( 1 * time.Second )
 					println( msg )
 				}()
 

@@ -29,21 +29,23 @@
 package manager
 
 import (
-	"github.com/epinion-online-research/ant-worker/entity"
+	//"github.com/epinion-online-research/ant-worker/entity"
 	//"time"
 )
 
 type JobManager struct {
-	observer chan entity.Job
-	//ExampleChannel chan string
+	Observer chan string
 
 }
 
+
+func (manager *JobManager ) ExampleAction(){
+
+}
+
+/*
+
 func (manager *JobManager) Init(){
-	//Setup params
-	//manager.ExampleChannel = make(chan string )
-
-
 
 }
 
@@ -51,11 +53,9 @@ func (manager *JobManager) Init(){
 func (manager *JobManager ) Monitor(){
 
 }
-func (manager *JobManager ) Example(){
 
-}
 
-func( manager *JobManager ) NewJob( job entity.Job ){
+func( manager *JobManager ) NewJob( ){
 
 }
 
@@ -70,4 +70,5 @@ func( manager *JobManager ) PauseJob(){
 func( manager *JobManager ) DeleteJob(){
 
 }
+*/
 

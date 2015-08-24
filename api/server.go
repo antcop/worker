@@ -29,22 +29,31 @@
 package api
 
 import (
-	//"github.com/epinion-online-research/ant-worker/manager"
+	"github.com/epinion-online-research/ant-worker/manager"
 )
 
 type RestServer struct {
 	Port string
-	//JobManager *manager.JobManager
-	Observer chan string
+	JobManager *manager.JobManager
+	//Observer chan string
 
 }
 
 func ( rest *RestServer ) Start(){
 	go func() {
+
+		/*
+		println( "Fac");
+		rest.JobManager.Observer <- "sdfsfsfsdfsdfsf"
+		println( <- rest.JobManager.Observer )
+
+		*/
+
 		router := Router{}
-		router.Init( rest.Observer );
+		router.Init( rest.JobManager.Observer );
 		router.RegisterJobs()
 		router.Listen()
+
 	}()
 }
 

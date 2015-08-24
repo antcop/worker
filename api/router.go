@@ -56,7 +56,11 @@ func (router *Router) RegisterJobs( ) {
 	router.engine.GET("/example", func (c *gin.Context ){
 			//Notify channel
 			println(" Before.............");
-			router.observer <- "Pingggggggggggggggggggg"
+
+			router.observer <- "Pingggggggggg"
+
+			//router.rest.JobManager.Observer <- "Pingggggggggggggggggggg"
+			//println( <- router.rest.JobManager.Observer );
 	})
 
 
