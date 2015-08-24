@@ -35,8 +35,7 @@ type JobManager struct {
 
 
 func (manager *JobManager ) ExampleAction( ex string ){
-	manager.Observer <- "Example action executed"
-	manager.Observer <- "This is data from rest server: "  + ex
+	manager.Observer <- "Example action executed. This is data from rest server: "  + ex
 }
 
 

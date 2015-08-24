@@ -30,13 +30,14 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/epinion-online-research/ant-worker/entity"
+	//"github.com/epinion-online-research/ant-worker/entity"
+	"github.com/epinion-online-research/ant-worker/manager"
 )
 
 type Router struct {
 	engine *gin.Engine
 	rest *RestServer
-	manager *JobManager
+	manager *manager.JobManager
 	//observer chan string
 
 }
@@ -56,7 +57,7 @@ func (router *Router) RegisterJobs( ) {
 
 			//Passing that data to the manager action
 
-			return manager.ExampleAction( " Example action " );
+			router.manager.ExampleAction( " Example action " );
 	})
 
 
