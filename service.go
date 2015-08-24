@@ -31,6 +31,8 @@ package main
 import (
 	. "github.com/epinion-online-research/ant-worker/daemon"
 	. "github.com/epinion-online-research/ant-worker/manager"
+	. "github.com/epinion-online-research/ant-worker/api"
+
 )
 
 func start(daemon Daemon) {
@@ -48,12 +50,22 @@ func stop(daemon Daemon) {
 
 
 func main() {
+
+	//Web server
+
+	ws := api.RestApiServer{}
+	ws.Start("1234");
+
+
+
+	/*
 	daemon := Daemon {
-		Name: "job",
+		Name: "antworker",
 		Description: "Job server",
 		Port : 1234,
 		OnStart: start,
 		OnStop:  stop,
 	}
 	daemon.Run(true)
+	*/
 }

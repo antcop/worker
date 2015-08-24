@@ -28,13 +28,17 @@
 
 package api
 
-type Server struct {
-	processor Processor
-	router Router
-	port int
+type RestAPIServer struct {
 }
 
-func (server Server) Listen() {
-	server.router.Register(server.processor)
-	server.router.Listen(":" + server.port)
+func ( rServer RestAPIServer ) Start( port int ){
+	router := Router{}
+	router.RegisterJobs()
+	router.Listen( port )
 }
+
+
+func ( rServer RestAPIServer ) Stop(){
+
+}
+

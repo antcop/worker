@@ -25,6 +25,7 @@
  *     Jerry Pham       <jerry@andjerry.com>
  *     Loi Nguyen       <loint@penlook.com>
  */
+package manager
 
 type Processor struct {
 	storage Storage

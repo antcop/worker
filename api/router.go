@@ -33,27 +33,28 @@ import (
 )
 
 type Router struct {
-	Handler *gin.Engine
-	processor Processor
+	handler *gin.Engine
 }
 
-func (router Router) GetHandler() *gin.Engine {
-	return router.Handler
-}
 
-func (router Router) Register(processor Processor) {
-	api := router.GetHandler()
+func (router Router) RegisterJobs() {
+	handler := router.GetHandler()
+	router := router.handler.Default();
 
 	// Create new resource
-	api.POST("/job", createJob(processor))
+	router.POST("/api/v1/job", createJob)
 	// Retrieve all resources
-	api.GET("/job", getJobs(processor))
+	router.GET("/api/v1//job", getJobs)
 	// Retrieve one resource
-	api.GET("/job/:id", getJob)
+	router.GET("/api/v1//job/:id", getJob)
 	// Update all fields for single resource
-	api.PUT("job/:id", updateJob)
+	router.PUT("/api/v1/job/:id", updateJob)
 	// Update one or some fields for single resource
-	api.PATCH("job/:id", partlyUpdateJob)
+	router.PATCH("/api/v1/job/:id", partlyUpdateJob)
 	// Delete resource
-	api.DELETE("job/:id", deleteJob)
+	router.DELETE("/api/v1/job/:id", deleteJob)
+}
+
+func ( router Router ) Listen( port int ){
+	router.handler.Default().Run( ":" + port );
 }
