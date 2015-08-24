@@ -29,9 +29,28 @@
 package manager
 
 import (
-	"github.com/epinion-online-research/gin"
+	"github.com/epinion-online-research/ant-worker/api/server"
 )
 
-type Server struct {
+type Manager struct {
+	server Server
+	processor Processor
+}
+
+func (manager Manager) Init() {
+	// Inject storage to processor
+	manager.processor = Processor {
+		storage : Storage {}
+	}
+}
+
+func (manager Manager) Run() {
+	go func() {
+		// Inject processor to web server
+		manager.server.processor = manager.processor
+		// Handle HTTP Request
+		manager.server.Listen()
+	}
 	
 }
+

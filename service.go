@@ -30,10 +30,16 @@ package main
 
 import (
 	. "github.com/epinion-online-research/ant-worker/daemon"
+	. "github.com/epinion-online-research/ant-worker/manager"
 )
 
 func start(daemon Daemon) {
-
+	manager := Manager {
+		server : Server {
+			port : daemon.GetPort(),
+		}
+	}
+	daemon.Print("")
 }
 
 func stop(daemon Daemon) {

@@ -28,12 +28,7 @@
 
 package manager
 
-import (
-	"testing"
-	"github.com/stretchr/testify/assert"
-)
-
-func TestServer(t *testing.T) {
-	assert := assert.New(t)
-	assert.Equal("Hello", "Hello")
+type Storage struct {
+	jobs []Job
 }
+

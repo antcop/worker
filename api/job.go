@@ -32,16 +32,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func createJob(c *gin.Context) {
-	c.JSON(200, gin.H {
-		"status": "Create new job",
-	})
+func createJob(processor) {
+	return func(c *gin.Context) {
+		jobInfo = c.getJob()
+		processor.WorkJob(jobInfo)
+		c.JSON(200, gin.H {
+			"status": "Create new job sucessful",
+		})
+	}
 }
 
-func getJobs(c *gin.Context) {
-	c.JSON(200, gin.H {
-		"status": "Retrieve all jobs",
-	})
+func getJobs(processor Processor) {
+	return func(c *gin.Context) {
+		storage := processor.Storage
+		// Get all job in storage
+		c.JSON(200, gin.H {
+			"status": "Retrieve all jobs",
+		})
+	}
 }
 
 func getJob(c *gin.Context) {

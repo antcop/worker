@@ -26,15 +26,6 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package api
-
-type Server struct {
-	processor Processor
-	router Router
-	port int
-}
-
-func (server Server) Listen() {
-	server.router.Register(server.processor)
-	server.router.Listen(":" + server.port)
+type Worker struct {
+	
 }

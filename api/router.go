@@ -34,19 +34,20 @@ import (
 
 type Router struct {
 	Handler *gin.Engine
+	processor Processor
 }
 
 func (router Router) GetHandler() *gin.Engine {
 	return router.Handler
 }
 
-func (router Router) Register() {
+func (router Router) Register(processor Processor) {
 	api := router.GetHandler()
 
 	// Create new resource
-	api.POST("/job", createJob)
+	api.POST("/job", createJob(processor))
 	// Retrieve all resources
-	api.GET("/job", getJobs)
+	api.GET("/job", getJobs(processor))
 	// Retrieve one resource
 	api.GET("/job/:id", getJob)
 	// Update all fields for single resource

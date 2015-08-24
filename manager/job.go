@@ -26,15 +26,14 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package api
+package manager
 
-type Server struct {
-	processor Processor
-	router Router
-	port int
-}
+import (
+	"github.com/epinion-online-research/ant-worker/worker"
+)
 
-func (server Server) Listen() {
-	server.router.Register(server.processor)
-	server.router.Listen(":" + server.port)
+type Job struct {
+	id string
+	name string
+	worker []Worker
 }
