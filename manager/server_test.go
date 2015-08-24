@@ -26,23 +26,14 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package main
+package manager
 
 import (
-	. "github.com/epinion-online-research/ant-worker/daemon"
+	"testing"
+	"github.com/stretchr/testify/assert"
 )
 
-func main() {
-	daemon := Daemon {
-		Name: "job",
-		Description: "Job server",
-		Port : 1234,
-		OnStart: func(daemon Daemon) {
-			daemon.Print("Service start")
-		},
-		OnStop: func(daemon Daemon) {
-			daemon.Print("Service stop")
-		},
-	}
-	daemon.Run(true)
+func TestServer(t *testing.T) {
+	assert := assert.New(t)
+	assert.Equal("Hello", "Hello")
 }

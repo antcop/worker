@@ -26,38 +26,54 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package daemon
+package main
 
 import (
+	"fmt"
 	"testing"
 	"github.com/stretchr/testify/assert"
+	"path/filepath"
+	"os"
+	"log"
+	"os/exec"
 )
 
-func getDaemon() Daemon {
-	return Daemon {
-		Name: "job",
-		Description: "Job server",
-		Port : 1234,
-		OnStart: func(daemon Daemon) {
-			daemon.Print("Start")
-		},
-		OnStop: func(daemon Daemon) {
-			daemon.Print("Stop")
-		},
+func system(cmd string, arg string) string {
+	var out string
+	if out, err := exec.Command(cmd, arg).Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
+		fmt.Println(out)
+		os.Exit(1)
 	}
+	return string(out)
 }
 
-func TestDaemonConstructor(t *testing.T) {
-	assert := assert.New(t)
-	daemon := getDaemon()
-	assert.Equal(daemon.GetName(), "job")
-	assert.Equal(daemon.GetDescription(), "Job server")
-	assert.Equal(daemon.GetPort(), 1234)
+func cwd() string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(dir)
 }
 
-func TestDaemonRun(t *testing.T) {
+func TestService(t *testing.T) {
 	assert := assert.New(t)
-	daemon := getDaemon()
-	daemon.Run(false)
-	assert.Equal("Hello", "Hello")
+	assert.Equal("hello", "hello")
+	
+	// Build and start service
+	//cur := cwd()
+	pwd := os.Getenv("PWD")
+	os.Chdir(pwd)
+	system("go", "build")
+	os.Link(pwd + "/ant-worker", "/usr/bin/ant-worker")
+	//system("ant-worker", "install")
+	//system("./ant-worker", "start")
+	/*
+	assert.Equal("hello", "hello")
+	
+	// Stop and cleanup
+	system("./ant-worker", "stop")
+	system("./ant-worker", "uninstall")
+	os.Chdir(cur)
+	*/
 }

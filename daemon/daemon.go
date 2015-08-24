@@ -61,13 +61,11 @@ func (daemon Daemon) GetPort() int {
 }
 
 func (daemon Daemon) Start(s service.Service) error {
-	logger.Infof("On Start")
 	go daemon.OnStart(daemon)
 	return nil
 }
 
 func (daemon Daemon) Stop(s service.Service) error {
-	logger.Infof("On Stop")
 	daemon.OnStop(daemon)
 	return nil
 }

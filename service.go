@@ -26,38 +26,28 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package daemon
+package main
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
+	. "github.com/epinion-online-research/ant-worker/daemon"
 )
 
-func getDaemon() Daemon {
-	return Daemon {
+func start(daemon Daemon) {
+
+}
+
+func stop(daemon Daemon) {
+	
+}
+
+
+func main() {
+	daemon := Daemon {
 		Name: "job",
 		Description: "Job server",
 		Port : 1234,
-		OnStart: func(daemon Daemon) {
-			daemon.Print("Start")
-		},
-		OnStop: func(daemon Daemon) {
-			daemon.Print("Stop")
-		},
+		OnStart: start,
+		OnStop:  stop,
 	}
-}
-
-func TestDaemonConstructor(t *testing.T) {
-	assert := assert.New(t)
-	daemon := getDaemon()
-	assert.Equal(daemon.GetName(), "job")
-	assert.Equal(daemon.GetDescription(), "Job server")
-	assert.Equal(daemon.GetPort(), 1234)
-}
-
-func TestDaemonRun(t *testing.T) {
-	assert := assert.New(t)
-	daemon := getDaemon()
-	daemon.Run(false)
-	assert.Equal("Hello", "Hello")
+	daemon.Run(true)
 }
