@@ -29,7 +29,7 @@
 package manager
 
 import (
-	"github.com/epinion-online-research/ant-worker/api/server"
+	"github.com/epinion-online-research/ant-worker/api"
 )
 
 type Manager struct {
@@ -40,7 +40,7 @@ type Manager struct {
 func (manager Manager) Init() {
 	// Inject storage to processor
 	manager.processor = Processor {
-		storage : Storage {}
+		storage : Storage {},
 	}
 }
 
@@ -50,7 +50,7 @@ func (manager Manager) Run() {
 		manager.server.processor = manager.processor
 		// Handle HTTP Request
 		manager.server.Listen()
-	}
+	}()
 	
 }
 
