@@ -28,19 +28,15 @@
 
 package manager
 
-import (
-	//"github.com/epinion-online-research/ant-worker/entity"
-	//"time"
-)
-
 type JobManager struct {
 	Observer chan string
 
 }
 
 
-func (manager *JobManager ) ExampleAction(){
+func (manager *JobManager ) ExampleAction( ex string ){
 	manager.Observer <- "Example action executed"
+	manager.Observer <- "This is data from rest server: "  + ex
 }
 
 

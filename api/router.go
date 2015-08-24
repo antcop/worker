@@ -30,12 +30,13 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	//"github.com/epinion-online-research/ant-worker/manager"
+	"github.com/epinion-online-research/ant-worker/entity"
 )
 
 type Router struct {
 	engine *gin.Engine
 	rest *RestServer
+	manager *JobManager
 	//observer chan string
 
 }
@@ -43,25 +44,19 @@ type Router struct {
 func (router *Router ) Init ( rest *RestServer  ){
 	router.engine = gin.Default()
 	router.rest = rest
-	//router.observer = observer
+	router.manager = rest.JobManager
 
 }
 
-func example( c *gin.Context ){
-	//Do something
-}
 
 func (router *Router) RegisterJobs( ) {
 
 	router.engine.GET("/example", func (c *gin.Context ){
-			//Notify channel
-			println(" Before.............");
+			//Do something with input from user
 
-			//router.rest.JobManager.Observer <- "Pingggggggggg"
-			router.rest.JobManager.ExampleAction();
+			//Passing that data to the manager action
 
-			//router.rest.JobManager.Observer <- "Pingggggggggggggggggggg"
-			//println( <- router.rest.JobManager.Observer );
+			return manager.ExampleAction( " Example action " );
 	})
 
 
@@ -85,5 +80,5 @@ func (router *Router) RegisterJobs( ) {
 }
 
 func ( router Router ) Listen(){
-	router.engine.Run( ":2345" );
+	router.engine.Run( ":" + router.rest.Port );
 }

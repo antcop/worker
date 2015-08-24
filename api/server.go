@@ -35,20 +35,11 @@ import (
 type RestServer struct {
 	Port string
 	JobManager *manager.JobManager
-	//Observer chan string
 
 }
 
 func ( rest *RestServer ) Start(){
 	go func() {
-
-		/*
-		println( "Fac");
-		rest.JobManager.Observer <- "sdfsfsfsdfsdfsf"
-		println( <- rest.JobManager.Observer )
-
-		*/
-
 		router := Router{}
 		router.Init( rest  );
 		router.RegisterJobs()

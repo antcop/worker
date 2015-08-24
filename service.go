@@ -45,10 +45,6 @@ func main() {
 		Observer: make( chan string ),
 	}
 
-	//manager.Init()
-
-	//observer := make( chan string )
-
 	//Rest Service
 	rs := api.RestServer  {
 		Port: "2345",
@@ -75,17 +71,4 @@ func main() {
 
 	wg.Wait()
 
-
-
-
-	/*
-	daemon := Daemon {
-		Name: "antworker",
-		Description: "Job server",
-		Port : 1234,
-		OnStart: start,
-		OnStop:  stop,
-	}
-	daemon.Run(true)
-	*/
 }
