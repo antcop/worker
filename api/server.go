@@ -28,17 +28,28 @@
 
 package api
 
-type RestAPIServer struct {
+import (
+	//"github.com/epinion-online-research/ant-worker/manager"
+)
+
+type RestServer struct {
+	Port string
+	//JobManager *manager.JobManager
+	Observer chan string
+
 }
 
-func ( rServer RestAPIServer ) Start( port int ){
-	router := Router{}
-	router.RegisterJobs()
-	router.Listen( port )
+func ( rest *RestServer ) Start(){
+	go func() {
+		router := Router{}
+		router.Init( rest.Observer );
+		router.RegisterJobs()
+		router.Listen()
+	}()
 }
 
 
-func ( rServer RestAPIServer ) Stop(){
+func ( rest *RestServer ) Stop(){
 
 }
 

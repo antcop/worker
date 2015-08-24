@@ -28,7 +28,46 @@
 
 package manager
 
-type Storage struct {
-	jobs []Job
+import (
+	"github.com/epinion-online-research/ant-worker/entity"
+	//"time"
+)
+
+type JobManager struct {
+	observer chan entity.Job
+	//ExampleChannel chan string
+
+}
+
+func (manager *JobManager) Init(){
+	//Setup params
+	//manager.ExampleChannel = make(chan string )
+
+
+
+}
+
+
+func (manager *JobManager ) Monitor(){
+
+}
+func (manager *JobManager ) Example(){
+
+}
+
+func( manager *JobManager ) NewJob( job entity.Job ){
+
+}
+
+func( manager *JobManager ) UpdateJob(){
+
+}
+
+func( manager *JobManager ) PauseJob(){
+
+}
+
+func( manager *JobManager ) DeleteJob(){
+
 }
 

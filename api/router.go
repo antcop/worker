@@ -30,31 +30,55 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	//"github.com/epinion-online-research/ant-worker/manager"
 )
 
 type Router struct {
-	handler *gin.Engine
+	engine *gin.Engine
+	//rest *RestServer
+	observer chan string
+
 }
 
+func (router *Router ) Init ( observer chan string  ){
+	router.engine = gin.Default()
+	//router.rest = rest
+	router.observer = observer
 
-func (router Router) RegisterJobs() {
-	handler := router.GetHandler()
-	router := router.handler.Default();
+}
+
+func example( c *gin.Context ){
+	//Do something
+}
+
+func (router *Router) RegisterJobs( ) {
+
+	router.engine.GET("/example", func (c *gin.Context ){
+			//Notify channel
+			println(" Before.............");
+			router.observer <- "Pingggggggggggggggggggg"
+	})
+
+
+	/*
+	// Retrieve all resources
+	router.engine.GET("/api/v1/jobs", getJobs )
+
+	// Retrieve one resource
+	router.engine.GET("/api/v1//job/:id", getJob)
 
 	// Create new resource
-	router.POST("/api/v1/job", createJob)
-	// Retrieve all resources
-	router.GET("/api/v1//job", getJobs)
-	// Retrieve one resource
-	router.GET("/api/v1//job/:id", getJob)
+	router.engine.POST("/api/v1/job", createJob)
+
 	// Update all fields for single resource
-	router.PUT("/api/v1/job/:id", updateJob)
+	router.engine.PUT("/api/v1/job/:id", updateJob)
 	// Update one or some fields for single resource
-	router.PATCH("/api/v1/job/:id", partlyUpdateJob)
+	router.engine.PATCH("/api/v1/job/:id", partlyUpdateJob)
 	// Delete resource
-	router.DELETE("/api/v1/job/:id", deleteJob)
+	router.engine.DELETE("/api/v1/job/:id", deleteJob)
+	*/
 }
 
-func ( router Router ) Listen( port int ){
-	router.handler.Default().Run( ":" + port );
+func ( router Router ) Listen(){
+	router.engine.Run( ":2345" );
 }

@@ -29,32 +29,64 @@
 package main
 
 import (
-	. "github.com/epinion-online-research/ant-worker/daemon"
-	. "github.com/epinion-online-research/ant-worker/manager"
-	. "github.com/epinion-online-research/ant-worker/api"
+	//"github.com/epinion-online-research/ant-worker/manager"
+	"sync"
+	"github.com/epinion-online-research/ant-worker/api"
+	"time"
 
 )
 
-func start(daemon Daemon) {
-	manager := Manager {
-		server : Server {
-			port : daemon.GetPort(),
-		}
-	}
-	daemon.Print("")
-}
-
-func stop(daemon Daemon) {
-	
-}
-
-
 func main() {
 
-	//Web server
+	var wg sync.WaitGroup
+	wg.Add( 1 )
 
-	ws := api.RestApiServer{}
-	ws.Start("1234");
+	//JobManager
+	//manager := manager.JobManager{}
+	//manager.Init()
+
+	observer := make( chan string )
+
+	//Rest Service
+	rs := api.RestServer  {
+		Port: "2345",
+		//JobManager: &manager,
+		Observer: observer,
+	}
+
+	rs.Start()
+
+
+	//Redis Service
+	//TODO
+
+
+	//Socket Service
+	//TODO
+
+	//...
+
+
+	//Start monitoring input from services
+	//go manager.Monitor()
+
+	go func() {
+		for {
+			select {
+			case msg := <- observer :
+				go func() {
+					println("Wowwwwwww")
+					time.Sleep( 10 * time.Second )
+					println( msg )
+				}()
+
+			}
+		}
+	}()
+
+
+	wg.Wait()
+
 
 
 
