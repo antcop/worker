@@ -50,7 +50,7 @@ func ( rest *RestServer ) Start(){
 		*/
 
 		router := Router{}
-		router.Init( rest.JobManager.Observer );
+		router.Init( rest  );
 		router.RegisterJobs()
 		router.Listen()
 

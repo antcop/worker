@@ -35,15 +35,15 @@ import (
 
 type Router struct {
 	engine *gin.Engine
-	//rest *RestServer
-	observer chan string
+	rest *RestServer
+	//observer chan string
 
 }
 
-func (router *Router ) Init ( observer chan string  ){
+func (router *Router ) Init ( ret *RestServer  ){
 	router.engine = gin.Default()
-	//router.rest = rest
-	router.observer = observer
+	router.rest = rest
+	//router.observer = observer
 
 }
 
@@ -57,7 +57,7 @@ func (router *Router) RegisterJobs( ) {
 			//Notify channel
 			println(" Before.............");
 
-			router.observer <- "Pingggggggggg"
+			router.rest.JobManager.Observer <- "Pingggggggggg"
 
 			//router.rest.JobManager.Observer <- "Pingggggggggggggggggggg"
 			//println( <- router.rest.JobManager.Observer );
