@@ -26,6 +26,8 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
+package worker
+
 type Worker struct {
 	
 }
