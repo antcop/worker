@@ -50,6 +50,11 @@ func (router *Router ) Init ( rest *RestServer  ){
 }
 
 
+type Json struct {
+	User     string `form:"user" json:"user" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
 func (router *Router) RegisterJobs( ) {
 
 	router.engine.GET("/example", func (c *gin.Context ){
@@ -60,6 +65,11 @@ func (router *Router) RegisterJobs( ) {
 			router.manager.ExampleAction( " Example action " );
 	})
 
+	// Create new resource
+	router.engine.POST("/api/v1/job", func( c *gin.Context ){
+			jobData :=  c.PostForm("job")
+			println( jobData )
+	});
 
 	/*
 	// Retrieve all resources
@@ -67,9 +77,6 @@ func (router *Router) RegisterJobs( ) {
 
 	// Retrieve one resource
 	router.engine.GET("/api/v1//job/:id", getJob)
-
-	// Create new resource
-	router.engine.POST("/api/v1/job", createJob)
 
 	// Update all fields for single resource
 	router.engine.PUT("/api/v1/job/:id", updateJob)
