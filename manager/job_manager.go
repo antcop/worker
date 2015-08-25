@@ -28,16 +28,34 @@
 
 package manager
 
+import (
+	"github.com/epinion-online-research/ant-worker/entity"
+)
+
 type JobManager struct {
 	Observer chan string
-
+	Config *entity.Config
+	JobProcessors []JobProcessor
 }
-
 
 func (manager *JobManager ) ExampleAction( ex string ){
 	manager.Observer <- "Example action executed. This is data from rest server: "  + ex
 }
 
+func( manager *JobManager ) NewJob( job *entity.Job ){
+	//job := entity.JobInterface( job )
+	manager.ProcessJob( job )
+}
+
+
+func (manager *JobManager ) ProcessJob( job *entity.Job ){
+	processor := JobProcessor{
+		Job: job,
+		Config: manager.Config,
+	}
+	//append( manager.JobProcessors, processor )
+	go processor.Process()
+}
 
 func (manager *JobManager ) Monitor(){
 	go func() {
@@ -47,22 +65,16 @@ func (manager *JobManager ) Monitor(){
 				go func() {
 					println( msg )
 				}()
-
 			}
 		}
 	}()
 }
 
+
+
 /*
 
 func (manager *JobManager) Init(){
-
-}
-
-
-
-
-func( manager *JobManager ) NewJob( ){
 
 }
 

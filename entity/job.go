@@ -1,7 +1,16 @@
 package entity
 
-type Job interface {
+/*
+type JobInterface interface {
 
 }
+*/
+
+
+type Job struct {
+	Name string
+}
+
+
 
 

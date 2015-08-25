@@ -1,6 +1,7 @@
 package entity
 
-type Worker interface{
+type Worker interface {
 
 }
+
 

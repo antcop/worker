@@ -32,6 +32,7 @@ import (
 	"github.com/epinion-online-research/ant-worker/manager"
 	"sync"
 	"github.com/epinion-online-research/ant-worker/api"
+	"github.com/epinion-online-research/ant-worker/entity"
 
 )
 
@@ -40,9 +41,16 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add( 1 )
 
+	//Configurations //TODO Read config from file
+	config := entity.Config{
+		MaxWorker: 10,
+		MaxWorkerPerJob: 2,
+	}
+
 	//JobManager
 	manager := manager.JobManager{
 		Observer: make( chan string ),
+		Config: &config,
 	}
 
 	//Rest Service
