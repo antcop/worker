@@ -41,12 +41,20 @@ import (
 	"net/http"
 )
 
-func system(cmd string, arg string) string {
+func system(sudo bool, cmd string, arg string) string {
 	var out string
-	if out, err := exec.Command(cmd, arg).Output(); err != nil {
-		fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
-		fmt.Println(out)
-		os.Exit(1)
+	if (sudo) {
+		if out, err := exec.Command("/bin/sh", "-c", "sudo " + cmd + " " + arg).Output(); err != nil {
+			fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
+			fmt.Println(out)
+			os.Exit(1)
+		}
+	} else {
+		if out, err := exec.Command(cmd, arg).Output(); err != nil {
+			fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
+			fmt.Println(out)
+			os.Exit(1)
+		}
 	}
 	return string(out)
 }
@@ -60,11 +68,11 @@ func cwd() string {
 }
 
 func copy(target string, dest string) {
-	 r, err := os.Open(target)
-     if err != nil {
-         panic(err)
-     }
-     defer r.Close()
+	r, err := os.Open(target)
+	if err != nil {
+		panic(err)
+	}
+	defer r.Close()
 
      w, err := os.Create(dest)
      if err != nil {
@@ -79,25 +87,26 @@ func copy(target string, dest string) {
      }
 }
 
-func setUpService() {
+func setUp() {
 	pwd := os.Getenv("PWD")
 	os.Chdir(pwd)
-	system("go", "build")
+	system(false, "go", "build")
 	copy(pwd + "/ant-worker", "/usr/bin/ant-worker")
-	os.Chmod("/usr/bin/ant-worker", 0777)
-	system("ant-worker", "install")
-	system("ant-worker", "start")
+	system(true, "chmod", "777 /usr/bin/ant-worker")
+	system(true, "ant-worker", "install")
+	system(true, "ant-worker", "start")
 }
 
-func teardownService() {
-	system("ant-worker", "stop")
-	system("ant-worker", "uninstall")
+func tearDown() {
+	system(true, "ant-worker", "stop")
+	system(true, "ant-worker", "uninstall")
 }
 
 func TestService(t *testing.T) {
 	assert := assert.New(t)
-	setUpService()
-	defer teardownService()
+	setUp()
+	return
+	defer tearDown()
 	response, err := http.Get("http://localhost:2345/test")
 	assert.Equal(true, err == nil)
 	if err == nil {
