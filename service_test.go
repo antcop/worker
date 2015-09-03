@@ -36,6 +36,7 @@ import (
 	"os"
 	"log"
 	"os/exec"
+	"io"
 	"io/ioutil"
 	"net/http"
 )
@@ -45,7 +46,6 @@ func system(sudo bool, cmd string, arg string) string {
 	if (sudo) {
 		if out, err := exec.Command("/bin/sh", "-c", "sudo " + cmd + " " + arg).Output(); err != nil {
 			fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
-			fmt.Fprintln(os.Stderr, "sudo " + cmd + " " + arg, err)
 			fmt.Println(out)
 			os.Exit(1)
 		}
@@ -53,7 +53,6 @@ func system(sudo bool, cmd string, arg string) string {
 		if out, err := exec.Command(cmd, arg).Output(); err != nil {
 			fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
 			fmt.Println(out)
-			fmt.Fprintln(os.Stderr, cmd, err)
 			os.Exit(1)
 		}
 	}
@@ -68,11 +67,31 @@ func cwd() string {
 	return string(dir)
 }
 
+func copy(target string, dest string) {
+	r, err := os.Open(target)
+	if err != nil {
+		panic(err)
+	}
+	defer r.Close()
+
+     w, err := os.Create(dest)
+     if err != nil {
+         panic(err)
+     }
+     defer w.Close()
+
+     // do the actual work
+     _, err = io.Copy(w, r)
+     if err != nil {
+         panic(err)
+     }
+}
+
 func setUp() {
 	pwd := os.Getenv("PWD")
 	os.Chdir(pwd)
 	system(false, "go", "build")
-	system(false, "cp", "-f " + pwd + "/ant-worker /usr/bin/ant-worker")
+	copy(pwd + "/ant-worker", "/usr/bin/ant-worker")
 	system(true, "chmod", "777 /usr/bin/ant-worker")
 	system(true, "ant-worker", "install")
 	system(true, "ant-worker", "start")
