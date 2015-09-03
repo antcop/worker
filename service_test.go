@@ -45,7 +45,7 @@ func system(sudo bool, cmd string, arg string) string {
 	if (sudo) {
 		if out, err := exec.Command("/bin/sh", "-c", "sudo " + cmd + " " + arg).Output(); err != nil {
 			fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
-			fmt.Fprintln(os.Stderr, "sudo " + cmd, err)
+			fmt.Fprintln(os.Stderr, "sudo " + cmd + " " + arg, err)
 			fmt.Println(out)
 			os.Exit(1)
 		}
@@ -72,7 +72,7 @@ func setUp() {
 	pwd := os.Getenv("PWD")
 	os.Chdir(pwd)
 	system(false, "go", "build")
-	system(true, "cp", "-f " + pwd + "/ant-worker /usr/bin/ant-worker")
+	system(false, "cp", "-f " + pwd + "/ant-worker /usr/bin/ant-worker")
 	system(true, "chmod", "777 /usr/bin/ant-worker")
 	system(true, "ant-worker", "install")
 	system(true, "ant-worker", "start")
