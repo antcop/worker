@@ -36,7 +36,6 @@ import (
 	"os"
 	"log"
 	"os/exec"
-	"io"
 	"io/ioutil"
 	"net/http"
 )
@@ -67,31 +66,11 @@ func cwd() string {
 	return string(dir)
 }
 
-func copy(target string, dest string) {
-	r, err := os.Open(target)
-	if err != nil {
-		panic(err)
-	}
-	defer r.Close()
-
-     w, err := os.Create(dest)
-     if err != nil {
-         panic(err)
-     }
-     defer w.Close()
-
-     // do the actual work
-     _, err = io.Copy(w, r)
-     if err != nil {
-         panic(err)
-     }
-}
-
 func setUp() {
 	pwd := os.Getenv("PWD")
 	os.Chdir(pwd)
 	system(false, "go", "build")
-	copy(pwd + "/ant-worker", "/usr/bin/ant-worker")
+	system(true, "cp", "-f " + pwd + "/ant-worker /usr/bin/ant-worker")
 	system(true, "chmod", "777 /usr/bin/ant-worker")
 	system(true, "ant-worker", "install")
 	system(true, "ant-worker", "start")
