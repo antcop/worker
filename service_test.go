@@ -105,7 +105,6 @@ func tearDown() {
 func TestService(t *testing.T) {
 	assert := assert.New(t)
 	setUp()
-	return
 	defer tearDown()
 	response, err := http.Get("http://localhost:2345/test")
 	assert.Equal(true, err == nil)
