@@ -45,6 +45,7 @@ func system(sudo bool, cmd string, arg string) string {
 	if (sudo) {
 		if out, err := exec.Command("/bin/sh", "-c", "sudo " + cmd + " " + arg).Output(); err != nil {
 			fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
+			fmt.Fprintln(os.Stderr, "sudo " + cmd, err)
 			fmt.Println(out)
 			os.Exit(1)
 		}
@@ -52,6 +53,7 @@ func system(sudo bool, cmd string, arg string) string {
 		if out, err := exec.Command(cmd, arg).Output(); err != nil {
 			fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
 			fmt.Println(out)
+			fmt.Fprintln(os.Stderr, cmd, err)
 			os.Exit(1)
 		}
 	}
