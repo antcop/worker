@@ -36,6 +36,9 @@ import (
 	"os"
 	"log"
 	"os/exec"
+	"io"
+	"io/ioutil"
+	"net/http"
 )
 
 func system(cmd string, arg string) string {
@@ -56,24 +59,51 @@ func cwd() string {
 	return string(dir)
 }
 
-func TestService(t *testing.T) {
-	assert := assert.New(t)
-	assert.Equal("hello", "hello")
-	
-	// Build and start service
-	//cur := cwd()
+func copy(target string, dest string) {
+	 r, err := os.Open(target)
+     if err != nil {
+         panic(err)
+     }
+     defer r.Close()
+
+     w, err := os.Create(dest)
+     if err != nil {
+         panic(err)
+     }
+     defer w.Close()
+
+     // do the actual work
+     _, err = io.Copy(w, r)
+     if err != nil {
+         panic(err)
+     }
+}
+
+func setUpService() {
 	pwd := os.Getenv("PWD")
 	os.Chdir(pwd)
 	system("go", "build")
-	os.Link(pwd + "/ant-worker", "/usr/bin/ant-worker")
-	//system("ant-worker", "install")
-	//system("./ant-worker", "start")
-	/*
-	assert.Equal("hello", "hello")
-	
-	// Stop and cleanup
-	system("./ant-worker", "stop")
-	system("./ant-worker", "uninstall")
-	os.Chdir(cur)
-	*/
+	copy(pwd + "/ant-worker", "/usr/bin/ant-worker")
+	os.Chmod("/usr/bin/ant-worker", 0777)
+	system("ant-worker", "install")
+	system("ant-worker", "start")
+}
+
+func teardownService() {
+	system("ant-worker", "stop")
+	system("ant-worker", "uninstall")
+}
+
+func TestService(t *testing.T) {
+	assert := assert.New(t)
+	setUpService()
+	defer teardownService()
+	response, err := http.Get("http://localhost:2345/test")
+	assert.Equal(true, err == nil)
+	if err == nil {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		assert.Equal(true, err == nil)
+		assert.Equal("{\"status\":\"hello world\"}\n", string(contents))
+	}
 }

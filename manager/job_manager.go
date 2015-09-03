@@ -38,6 +38,10 @@ type JobManager struct {
 	JobProcessors []JobProcessor
 }
 
+func (manager *JobManager ) TestAction(ex string ){
+	manager.Observer <- ex
+}
+
 func (manager *JobManager ) ExampleAction( ex string ){
 	manager.Observer <- "Example action executed. This is data from rest server: "  + ex
 }
@@ -47,9 +51,8 @@ func( manager *JobManager ) NewJob( job *entity.Job ){
 	manager.ProcessJob( job )
 }
 
-
 func (manager *JobManager ) ProcessJob( job *entity.Job ){
-	processor := JobProcessor{
+	processor := JobProcessor {
 		Job: job,
 		Config: manager.Config,
 	}
@@ -57,7 +60,7 @@ func (manager *JobManager ) ProcessJob( job *entity.Job ){
 	go processor.Process()
 }
 
-func (manager *JobManager ) Monitor(){
+func (manager *JobManager ) Monitor() {
 	go func() {
 		for {
 			select {

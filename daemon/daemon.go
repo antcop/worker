@@ -31,7 +31,7 @@ package daemon
 import (
 	"os"
 	"log"
-	"github.com/epinion-online-research/service"
+	"github.com/kardianos/service"
 )
 
 var logger service.Logger
@@ -44,7 +44,7 @@ type Daemon struct {
 	OnStop func(daemon Daemon)
 }
 
-func (daemon Daemon) Print(message string) {
+func (daemon Daemon) Println(message string) {
 	logger.Infof(message)
 }
 
@@ -70,7 +70,7 @@ func (daemon Daemon) Stop(s service.Service) error {
 	return nil
 }
 
-func (daemon Daemon) Run(bgMode bool) {
+func (daemon Daemon) RunAsService(bgMode bool) {
 	config := &service.Config {
 		Name: daemon.GetName(),
 		DisplayName: daemon.GetName(),

@@ -30,53 +30,43 @@ package main
 
 import (
 	"github.com/epinion-online-research/ant-worker/manager"
-	"sync"
 	"github.com/epinion-online-research/ant-worker/api"
 	"github.com/epinion-online-research/ant-worker/entity"
-
+	. "github.com/epinion-online-research/ant-worker/daemon"
 )
 
-func main() {
+func startService(daemon Daemon) {
 
-	var wg sync.WaitGroup
-	wg.Add( 1 )
-
-	//Configurations //TODO Read config from file
 	config := entity.Config{
 		MaxWorker: 10,
 		MaxWorkerPerJob: 2,
 	}
 
 	//JobManager
-	manager := manager.JobManager{
+	manager := manager.JobManager {
 		Observer: make( chan string ),
 		Config: &config,
 	}
-
-	//Rest Service
-	rs := api.RestServer  {
+	
+	restServer := api.RestServer {
 		Port: "2345",
 		JobManager: &manager,
-		//Observer: observer,
 	}
 
-	rs.Start()
+	restServer.Start()
+}
 
+func stopService(daemon Daemon) {
+	daemon.Println("Stop Daemon")
+}
 
-	//Redis Service
-	//TODO
-
-
-	//Socket Service
-	//TODO
-
-	//...
-
-
-	//Start monitoring input from services
-	manager.Monitor()
-
-
-	wg.Wait()
-
+func main() {
+	daemon := Daemon {
+		Name: "ant-worker",
+		Description: "Ant-worker",
+		Port : 1234,
+		OnStart: startService,
+		OnStop: stopService,
+	}
+	daemon.RunAsService(true)
 }

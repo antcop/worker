@@ -31,6 +31,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	//"github.com/epinion-online-research/ant-worker/entity"
+	"net/http"
 	"github.com/epinion-online-research/ant-worker/manager"
 )
 
@@ -46,9 +47,7 @@ func (router *Router ) Init ( rest *RestServer  ){
 	router.engine = gin.Default()
 	router.rest = rest
 	router.manager = rest.JobManager
-
 }
-
 
 type Json struct {
 	User     string `form:"user" json:"user" binding:"required"`
@@ -56,7 +55,12 @@ type Json struct {
 }
 
 func (router *Router) RegisterJobs( ) {
-
+	router.engine.GET("/test", func (context *gin.Context ) {
+		context.JSON(http.StatusOK, gin.H{"status": "hello world"})
+		//router.manager.TestAction("hello world")
+	})
+	
+	/*
 	router.engine.GET("/example", func (c *gin.Context ){
 			//Do something with input from user
 
@@ -70,7 +74,7 @@ func (router *Router) RegisterJobs( ) {
 			jobData :=  c.PostForm("job")
 			println( jobData )
 	});
-
+	*/
 	/*
 	// Retrieve all resources
 	router.engine.GET("/api/v1/jobs", getJobs )
@@ -87,6 +91,6 @@ func (router *Router) RegisterJobs( ) {
 	*/
 }
 
-func ( router Router ) Listen(){
-	router.engine.Run( ":" + router.rest.Port );
+func (router Router) Listen() {
+	router.engine.Run( ":" + router.rest.Port)
 }

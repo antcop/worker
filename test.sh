@@ -1,2 +1,2 @@
 export PWD=$(pwd)
-go test .
+go test ./... -v

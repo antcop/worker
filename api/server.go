@@ -39,13 +39,10 @@ type RestServer struct {
 }
 
 func ( rest *RestServer ) Start(){
-	go func() {
-		router := Router{}
-		router.Init( rest  );
-		router.RegisterJobs()
-		router.Listen()
-
-	}()
+	router := Router{}
+	router.Init(rest)
+	router.RegisterJobs()
+	router.Listen()
 }
 
 func ( rest *RestServer ) Stop(){
