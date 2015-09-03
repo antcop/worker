@@ -7,8 +7,8 @@ services:
   - redis-server
 
 install:
-  - go get -v ./...
-  - go get github.com/stretchr/testify/assert
-  - chmod +x ./test.sh
+  - sudo go get -v ./...
+  - sudo go get github.com/stretchr/testify/assert
+  - sudo chmod +x ./test.sh
 script:
-  - ./test.sh
+  - sudo ./test.sh
