@@ -39,6 +39,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 func system(sudo bool, cmd string, arg string) string {
@@ -97,6 +98,10 @@ func setUp() {
 	system(true, "chmod", "777 /usr/bin/ant-worker")
 	system(true, "ant-worker", "install")
 	system(true, "ant-worker", "start")
+	for {
+		time.Sleep(1 * time.Second)
+		break
+	}
 }
 
 func tearDown() {
