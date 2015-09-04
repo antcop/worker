@@ -11,8 +11,8 @@
 
 		{
 			error: false  
-			jobs : {
-				1: {
+			jobs : [
+				{
 					key: 'The key of the job (generated when create new job)',
 					name: 'The name of job',
 					status: 1,
@@ -20,13 +20,13 @@
 					estimate: 25
 				},
 
-				2: {
+				{
                     key: 'The key of the job (generated when create new job)',
                     name: 'The name of job',
                     status: -1,
                     progress: 0,
                     estimate: 0
-                }
+                ]
                 ...
             }
 			}
@@ -43,14 +43,17 @@
 2. Output Example
 
 		{
-			{
+		    [
+		    <jobid> : {
                 key: 'The key of the job (generated when create new job)',
                 name: 'The name of job',
                 job_status: -1,
                 progress: 0,
                 estimate: 30
-            }
+            		
 		}
+	     ]
+	}
 
 
 ## III. Request job
