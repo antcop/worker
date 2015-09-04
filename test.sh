@@ -1,7 +1,7 @@
 SERV="ant-worker"
 go build
-./$SERV install
-./$SERV start
+sudo ./$SERV install
+sudo ./$SERV start
 go test ./... -v
-./$SERV stop
-./$SERV uninstall
+sudo ./$SERV stop
+sudo ./$SERV uninstall
