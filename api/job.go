@@ -30,42 +30,72 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/epinion-online-research/ant-worker/manager"
+	"net/http"
 )
 
-func createJob(c *gin.Context ) {
-	c.JSON(200, gin.H {
+const MaxListJob int = 20
+
+type Job struct {
+	manager *manager.JobManager
+}
+
+// GET /test
+func (job Job) Test(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H {"status": true})
+}
+
+// POST api/v1/job
+func (job Job) Create(context *gin.Context ) {
+	context.JSON(200, gin.H {
 		"status": "Retrieve one job",
 	})
 }
 
-func getJobs( c *gin.Context ) {
-
-	c.JSON(200, gin.H {
-		"status": "Retrieve full job",
+// GET /api/v1/job
+func (job Job) GetAll(context *gin.Context ) {
+	var jobList = make([]gin.H, 20)
+	jobList = append(jobList, gin.H {
+		"key" : "12355",
+		"name" : " Do some thing",
+		"status": 1,
+		"progress": 90,
+		"estimate": 25,
 	})
-
+	context.JSON(200, gin.H {
+		"status": true,
+		"jobs": jobList,
+	})
 }
 
-func getJob(c *gin.Context) {
-	c.JSON(200, gin.H {
-		"status": "Retrieve one job",
+// GET /api/v1/job/:id
+func (job Job) Get(context *gin.Context) {
+	context.JSON(200, gin.H {
+		"status": true,
+		"job": gin.H {
+			"key" : context.Param("key"),
+			"name" : " Do some thing",
+			"status": 1,
+			"progress": 90,
+			"estimate": 25,
+		},
 	})
 }
 
-func updateJob(c *gin.Context) {
-	c.JSON(200, gin.H {
+func (job Job) Update(context *gin.Context) {
+	context.JSON(200, gin.H {
 		"status": "Update one job",
 	})
 }
 
-func partlyUpdateJob(c *gin.Context) {
-	c.JSON(200, gin.H {
+func (job Job) PartlyUpdate(context *gin.Context) {
+	context.JSON(200, gin.H {
 		"status": "Update parly job",
 	})
 }
 
-func deleteJob(c *gin.Context) {
-	c.JSON(200, gin.H {
+func (job Job) Delete(context *gin.Context) {
+	context.JSON(200, gin.H {
 		"status": "Delete job",
 	})
 }

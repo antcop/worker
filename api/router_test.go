@@ -33,11 +33,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetJobs( t *testing.T ) {
+func TestRouter( t *testing.T ) {
 	assert := assert.New(t)
+	/*
 	url := "localhost:2345/api/v1/jobs"
-	makeRequest("GET",	 url, nil )
+	content, err := makeRequest("GET",	 url, nil )
+	assert.Nil(err)*/
 	assert.Equal("Hello", "Hello")
+
 	//assert.Nil(err)
 	//assert.Equal("1", request)
 }

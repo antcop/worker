@@ -48,7 +48,7 @@ func startService(daemon Daemon) {
 		Config: &config,
 	}
 	
-	restServer := api.RestServer {
+	restServer := api.Rest {
 		Port: "2345",
 		JobManager: &manager,
 	}

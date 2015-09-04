@@ -32,20 +32,19 @@ import (
 	"github.com/epinion-online-research/ant-worker/manager"
 )
 
-type RestServer struct {
+type Rest struct {
 	Port string
 	JobManager *manager.JobManager
-
 }
 
-func ( rest *RestServer ) Start(){
+func (rest *Rest) Start(){
 	router := Router{}
 	router.Init(rest)
 	router.RegisterJobs()
 	router.Listen()
 }
 
-func ( rest *RestServer ) Stop(){
+func (rest *Rest) Stop(){
 
 }
 

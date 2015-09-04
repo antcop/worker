@@ -38,8 +38,7 @@ type JobManager struct {
 	JobProcessors []JobProcessor
 }
 
-func (manager *JobManager ) TestAction(ex string ){
-	manager.Observer <- ex
+func (manager *JobManager ) Test() {
 }
 
 func (manager *JobManager ) ExampleAction( ex string ){

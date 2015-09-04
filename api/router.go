@@ -31,64 +31,45 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	//"github.com/epinion-online-research/ant-worker/entity"
-	"net/http"
+	//"net/http"
 	"github.com/epinion-online-research/ant-worker/manager"
 )
 
 type Router struct {
-	engine *gin.Engine
-	rest *RestServer
+	engine  *gin.Engine
+	rest    *Rest
 	manager *manager.JobManager
-	//observer chan string
-
 }
 
-func (router *Router ) Init ( rest *RestServer  ){
+func (router *Router ) Init (rest *Rest) {
 	router.engine = gin.Default()
 	router.rest = rest
 	router.manager = rest.JobManager
 }
-
+/*
 type Json struct {
 	User     string `form:"user" json:"user" binding:"required"`
 	Password string `form:"password" json:"password" binding:"required"`
-}
+}*/
 
 func (router *Router) RegisterJobs( ) {
-	router.engine.GET("/test", func (context *gin.Context ) {
-		context.JSON(http.StatusOK, gin.H{"status": "hello world"})
-		//router.manager.TestAction("hello world")
-	})
-	
-	/*
-	router.engine.GET("/example", func (c *gin.Context ){
-			//Do something with input from user
-
-			//Passing that data to the manager action
-
-			router.manager.ExampleAction( " Example action " );
-	})
-
+	job := Job {
+		manager: router.manager,
+	}
+	// Example
+	router.engine.GET("/test", job.Test)
 	// Create new resource
-	router.engine.POST("/api/v1/job", func( c *gin.Context ){
-			jobData :=  c.PostForm("job")
-			println( jobData )
-	});
-	*/
-	/*
+	router.engine.POST("/api/v1/job", job.Create)
 	// Retrieve all resources
-	router.engine.GET("/api/v1/jobs", getJobs )
-
+	router.engine.GET("/api/v1/jobs", job.GetAll)
 	// Retrieve one resource
-	router.engine.GET("/api/v1//job/:id", getJob)
-
+	router.engine.GET("/api/v1/job/:id", job.Get)
 	// Update all fields for single resource
-	router.engine.PUT("/api/v1/job/:id", updateJob)
+	router.engine.PUT("/api/v1/job/:id", job.Update)
 	// Update one or some fields for single resource
-	router.engine.PATCH("/api/v1/job/:id", partlyUpdateJob)
+	router.engine.PATCH("/api/v1/job/:id", job.PartlyUpdate)
 	// Delete resource
-	router.engine.DELETE("/api/v1/job/:id", deleteJob)
-	*/
+	router.engine.DELETE("/api/v1/job/:id", job.Delete)
 }
 
 func (router Router) Listen() {

@@ -26,23 +26,21 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package main
+package api
 
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"io/ioutil"
 )
 
-func TestService(t *testing.T) {
+func TestRest( t *testing.T ) {
 	assert := assert.New(t)
-	response, err := http.Get("http://localhost:2345/test")
-	assert.Equal(true, err == nil)
-	if err == nil {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		assert.Equal(true, err == nil)
-		assert.Equal("{\"status\":\"hello world\"}\n", string(contents))
-	}
+	/*
+	url := "localhost:2345/api/v1/jobs"
+	_, err := makeRequest("GET",	 url, nil )
+	assert.Nil(err)*/
+	assert.Equal("Hello", "Hello")
+
+	//assert.Nil(err)
+	//assert.Equal("1", request)
 }
