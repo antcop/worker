@@ -35,6 +35,8 @@ import (
 	"io/ioutil"
 )
 
+// Integration test
+// Make sure that daemon process works fine
 func TestService(t *testing.T) {
 	assert := assert.New(t)
 	response, err := http.Get("http://localhost:2345/test")

@@ -31,6 +31,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/epinion-online-research/ant-worker/manager"
+	//"github.com/epinion-online-research/ant-worker/entity"
 	"net/http"
 )
 
@@ -47,21 +48,24 @@ func (job Job) Test(context *gin.Context) {
 
 // POST api/v1/job
 func (job Job) Create(context *gin.Context ) {
+	//name := context.Param("name")
 	context.JSON(200, gin.H {
-		"status": "Retrieve one job",
+		"status": true,
 	})
 }
 
 // GET /api/v1/job
 func (job Job) GetAll(context *gin.Context ) {
 	var jobList = make([]gin.H, 20)
-	jobList = append(jobList, gin.H {
-		"key" : "12355",
-		"name" : " Do some thing",
-		"status": 1,
-		"progress": 90,
-		"estimate": 25,
-	})
+	for i:=0; i<=100; i++ {
+		jobList = append(jobList, gin.H {
+			"key" : "12355",
+			"name" : " Do some thing",
+			"status" : 1,
+			"progress" : 90,
+			"estimate" : 25,
+		})
+	}
 	context.JSON(200, gin.H {
 		"status": true,
 		"jobs": jobList,
@@ -71,9 +75,9 @@ func (job Job) GetAll(context *gin.Context ) {
 // GET /api/v1/job/:id
 func (job Job) Get(context *gin.Context) {
 	context.JSON(200, gin.H {
-		"status": true,
+		"status": false,
 		"job": gin.H {
-			"key" : context.Param("key"),
+			"key" : context.Param("id"),
 			"name" : " Do some thing",
 			"status": 1,
 			"progress": 90,
@@ -84,18 +88,39 @@ func (job Job) Get(context *gin.Context) {
 
 func (job Job) Update(context *gin.Context) {
 	context.JSON(200, gin.H {
-		"status": "Update one job",
+		"status": false,
+		"job": gin.H {
+			"key" : context.Param("id"),
+			"name" : " Do some thing",
+			"status": 1,
+			"progress": 90,
+			"estimate": 25,
+		},
 	})
 }
 
 func (job Job) PartlyUpdate(context *gin.Context) {
 	context.JSON(200, gin.H {
-		"status": "Update parly job",
+		"status": false,
+		"job": gin.H {
+			"key" : context.Param("id"),
+			"name" : " Do some thing",
+			"status": 1,
+			"progress": 90,
+			"estimate": 25,
+		},
 	})
 }
 
 func (job Job) Delete(context *gin.Context) {
 	context.JSON(200, gin.H {
-		"status": "Delete job",
+		"status": false,
+		"job": gin.H {
+			"key" : context.Param("id"),
+			"name" : " Do some thing",
+			"status": 1,
+			"progress": 90,
+			"estimate": 25,
+		},
 	})
 }

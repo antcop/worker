@@ -45,7 +45,8 @@ func (manager *JobManager ) ExampleAction( ex string ){
 	manager.Observer <- "Example action executed. This is data from rest server: "  + ex
 }
 
-func( manager *JobManager ) NewJob( job *entity.Job ){
+func( manager *JobManager ) CreateJob(job *entity.Job) {
+	
 	//job := entity.JobInterface( job )
 	manager.ProcessJob( job )
 }

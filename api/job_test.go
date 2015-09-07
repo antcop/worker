@@ -73,49 +73,77 @@ func TestJobTest( t *testing.T ) {
 	data := toJson(response.Body)
 	assert.NotNil(data)
 	status := data["status"].(bool)
-	assert.Equal("true", status)
+	assert.Equal(true, status)
 }
 
 // POST api/v1/job
 func TestCreateJob(t *testing.T) {
 	assert := assert.New(t)
-	//router.POST("/api/v1/job", job.Test)
-	//response := makeMockupRequest("POST", "/api/v1/job", Json {})
-	assert.Equal("test", "test")
+	router.POST("/api/v1/job", job.Test)
+	response := makeMockupRequest("POST", "/api/v1/job", Json {})
+	assert.NotNil(response)
+	data := toJson(response.Body)
+	assert.NotNil(data)
+	status := data["status"].(bool)
+	assert.Equal(true, status)
 }
 
 // GET api/v1/job
 func TestGetAllJob(t *testing.T) {
 	assert := assert.New(t)
-	router.GET("/api/v1/job", job.Test)
+	router.GET("/api/v1/job", job.GetAll)
 	response := makeMockupRequest("GET", "/api/v1/job", Json {})
 	assert.NotNil(response)
 	data := toJson(response.Body)
 	assert.NotNil(data)
 	status := data["status"].(bool)
-	assert.Equal("true", status)
+	assert.Equal(true, status)
 }
 
 // GET api/v1/job/:id
 func TestGetJob(t *testing.T) {
 	assert := assert.New(t)
-	router.GET("/api/v1/job/:id", job.Test)
+	router.GET("/api/v1/job/:id", job.Get)
 	response := makeMockupRequest("GET", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
 	data := toJson(response.Body)
 	assert.NotNil(data)
-	//key := data["key"].(int)
-	//assert.Equal("1234", key)
+	key := data["job"].(map[string] interface {})["key"]
+	assert.Equal("1234", key)
 }
 
 // PUT api/v1/job/:id
 func TestUpdateJob(t *testing.T) {
 	assert := assert.New(t)
-	assert.Equal("hello", "hello")
+	router.PUT("/api/v1/job/:id", job.Update)
+	response := makeMockupRequest("PUT", "/api/v1/job/1234", Json {})
+	assert.NotNil(response)
+	data := toJson(response.Body)
+	assert.NotNil(data)
+	key := data["job"].(map[string] interface {})["key"]
+	assert.Equal("1234", key)
 }
 
 // PATCH api/v1/job/:id
 func TestParlyUpdateJob(t *testing.T) {
 	assert := assert.New(t)
-	assert.Equal("hello", "hello")
+	router.PATCH("/api/v1/job/:id", job.PartlyUpdate)
+	response := makeMockupRequest("PATCH", "/api/v1/job/1234", Json {})
+	assert.NotNil(response)
+	data := toJson(response.Body)
+	assert.NotNil(data)
+	key := data["job"].(map[string] interface {})["key"]
+	assert.Equal("1234", key)
+}
+
+// DELETE api/v1/job/:id
+func TestDeleteJob(t *testing.T) {
+	assert := assert.New(t)
+	router.DELETE("/api/v1/job/:id", job.PartlyUpdate)
+	response := makeMockupRequest("DELETE", "/api/v1/job/1234", Json {})
+	assert.NotNil(response)
+	data := toJson(response.Body)
+	assert.NotNil(data)
+	key := data["job"].(map[string] interface {})["key"]
+	assert.Equal("1234", key)
 }

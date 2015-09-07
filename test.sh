@@ -1,3 +1,4 @@
+export GIN_MODE=release
 SERV="ant-worker"
 go build
 sudo ./$SERV install

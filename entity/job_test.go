@@ -28,9 +28,42 @@
 
 package entity
 
-type Job struct {
-	Name string
-	Endpoint map[string] interface {}
-	Params map[string] interface {}
-	Workload []map[string] interface {}
+import (
+	"testing"
+	"github.com/stretchr/testify/assert"
+)
+
+type Json map[string] interface {}
+
+func TestJobEntity( t *testing.T ) {
+	assert := assert.New(t)
+	job := Job {
+		Name: "sendemail",
+		Endpoint: Json {
+			"url" : "http://mailchimp.com/api/v1/",
+			"method": "GET",
+			"data": Json {
+			},
+		},
+		Params: Json {
+			"sender" : "root@localhost",
+			"receiver" : "",
+			"user_activation": "Dear, {{ name }}, \n",
+		},
+		Workload: []map[string] interface{} {
+			Json {
+				"user_activation": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+				"user_redeemtion": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+			},
+		},
+	}
+	assert.Equal("sendemail", job.Name)
 }
