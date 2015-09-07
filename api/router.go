@@ -57,7 +57,7 @@ func (router *Router) RegisterJobs( ) {
 		manager: router.manager,
 	}
 	// Example
-	router.engine.GET("/test", job.Test)
+	router.engine.GET("/api/v1/test", job.Test)
 	// Create new resource
 	router.engine.POST("/api/v1/job", job.Create)
 	// Retrieve all resources

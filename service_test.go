@@ -39,12 +39,12 @@ import (
 // Make sure that daemon process works fine
 func TestService(t *testing.T) {
 	assert := assert.New(t)
-	response, err := http.Get("http://localhost:2345/test")
+	response, err := http.Get("http://localhost:2345/api/v1/test")
 	assert.Equal(true, err == nil)
 	if err == nil {
 		defer response.Body.Close()
 		contents, err := ioutil.ReadAll(response.Body)
 		assert.Equal(true, err == nil)
-		assert.Equal("{\"status\":\"hello world\"}\n", string(contents))
+		assert.Equal("{\"status\":true}\n", string(contents))
 	}
 }

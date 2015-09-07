@@ -67,8 +67,8 @@ func toJson(data io.Reader) Json {
 // GET /test
 func TestJobTest( t *testing.T ) {
 	assert := assert.New(t)
-	router.GET("/test", job.Test)
-	response := makeMockupRequest("GET", "/test", Json {})
+	router.GET("/api/v1/test", job.Test)
+	response := makeMockupRequest("GET", "/api/v1/test", Json {})
 	assert.NotNil(response)
 	data := toJson(response.Body)
 	assert.NotNil(data)

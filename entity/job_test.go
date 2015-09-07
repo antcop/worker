@@ -35,20 +35,20 @@ import (
 
 type Json map[string] interface {}
 
-func TestJobEntity( t *testing.T ) {
+func TestJobSendMailEntity( t *testing.T ) {
 	assert := assert.New(t)
-	job := Job {
+	job1 := Job {
 		Name: "sendemail",
+		Description: "Send Email By Using MailChimp",
+		Type: "api_call",
 		Endpoint: Json {
 			"url" : "http://mailchimp.com/api/v1/",
-			"method": "GET",
+			"method": "GET", // "POST"
 			"data": Json {
+				"sender": "root@localhost",
+				"receiver": "",
+				"user_activation": "Dear, {{ name }}, \n",
 			},
-		},
-		Params: Json {
-			"sender" : "root@localhost",
-			"receiver" : "",
-			"user_activation": "Dear, {{ name }}, \n",
 		},
 		Workload: []map[string] interface{} {
 			Json {
@@ -57,7 +57,19 @@ func TestJobEntity( t *testing.T ) {
 					"email": "nguyen.trung.loi@epinion.dk",
 					"name": "Loi",
 				},
-				"user_redeemtion": Json {
+				"user_redemption": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+			},
+			Json {
+				"user_activation": Json {
+					"id" : 123457,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+				"user_redemption": Json {
 					"id" : 123456,
 					"email": "nguyen.trung.loi@epinion.dk",
 					"name": "Loi",
@@ -65,5 +77,5 @@ func TestJobEntity( t *testing.T ) {
 			},
 		},
 	}
-	assert.Equal("sendemail", job.Name)
+	assert.Equal("sendemail", job1.Name)
 }

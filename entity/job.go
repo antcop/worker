@@ -30,6 +30,8 @@ package entity
 
 type Job struct {
 	Name string
+	Type string
+	Description string
 	Endpoint map[string] interface {}
 	Params map[string] interface {}
 	Workload []map[string] interface {}

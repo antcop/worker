@@ -11,6 +11,7 @@ services:
 install:
   - go get -v ./...
   - go get github.com/stretchr/testify/assert
+  - export GIN_MODE=release
   - export SERV="ant-worker"
   - go build
   - sudo ./$SERV install
