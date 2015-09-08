@@ -29,13 +29,17 @@
 package manager
 
 import (
-	"github.com/epinion-online-research/ant-worker/entity"
+	. "github.com/epinion-online-research/ant-worker/entity"
+	. "github.com/epinion-online-research/ant-worker/module"
 )
+
+type Json map[string] interface {}
 
 type JobManager struct {
 	Observer chan string
-	Config *entity.Config
-	JobProcessors []JobProcessor
+	Config Config
+	Module Module
+	JobProcessors [] JobProcessor
 }
 
 func (manager *JobManager ) Test() {
@@ -45,18 +49,18 @@ func (manager *JobManager ) ExampleAction( ex string ){
 	manager.Observer <- "Example action executed. This is data from rest server: "  + ex
 }
 
-func( manager *JobManager ) CreateJob(job *entity.Job) {
-	
-	//job := entity.JobInterface( job )
-	manager.ProcessJob( job )
+func( manager *JobManager ) CreateJob(job *Job) {
+	db := manager.Module.Sql.Db
+	db.Create(&job)
+	//manager.ProcessJob( job )
 }
 
-func (manager *JobManager ) ProcessJob( job *entity.Job ){
+func (manager *JobManager ) ProcessJob( job Job ){
 	processor := JobProcessor {
 		Job: job,
 		Config: manager.Config,
 	}
-	//append( manager.JobProcessors, processor )
+	//append( manager.JobProcessors, processor)
 	go processor.Process()
 }
 

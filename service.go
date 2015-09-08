@@ -32,12 +32,13 @@ import (
 	"github.com/epinion-online-research/ant-worker/manager"
 	"github.com/epinion-online-research/ant-worker/api"
 	"github.com/epinion-online-research/ant-worker/entity"
+	. "github.com/epinion-online-research/ant-worker/module"
 	. "github.com/epinion-online-research/ant-worker/daemon"
 )
 
 func startService(daemon Daemon) {
 
-	config := entity.Config{
+	config := entity.Config {
 		MaxWorker: 10,
 		MaxWorkerPerJob: 2,
 	}
@@ -45,7 +46,10 @@ func startService(daemon Daemon) {
 	//JobManager
 	manager := manager.JobManager {
 		Observer: make( chan string ),
-		Config: &config,
+		Config: config,
+		Module: Module {
+			Config: config,
+		},
 	}
 	
 	restServer := api.Rest {

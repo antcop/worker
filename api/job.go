@@ -31,7 +31,8 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/epinion-online-research/ant-worker/manager"
-	//"github.com/epinion-online-research/ant-worker/entity"
+	"github.com/epinion-online-research/ant-worker/entity"
+	. "github.com/epinion-online-research/ant-worker/util"
 	"net/http"
 )
 
@@ -48,7 +49,50 @@ func (job Job) Test(context *gin.Context) {
 
 // POST api/v1/job
 func (job Job) Create(context *gin.Context ) {
-	//name := context.Param("name")
+
+	newJob := entity.Job {
+		Name: "sendemail",
+		Description: "Send Email By Using MailChimp",
+		Type: "api_call",
+		Endpoint: Json {
+			"url" : "http://mailchimp.com/api/v1/",
+			"method": "GET", // "POST"
+			"data": Json {
+				"sender": "root@localhost",
+				"receiver": "",
+				"user_activation": "Dear, {{ name }}, \n",
+			},
+		},
+		Workload: []map[string] interface{} {
+			Json {
+				"user_activation": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+				"user_redemption": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+			},
+			Json {
+				"user_activation": Json {
+					"id" : 123457,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+				"user_redemption": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+			},
+		},
+	}
+
+	job.manager.CreateJob(&newJob)
+
 	context.JSON(200, gin.H {
 		"status": true,
 	})

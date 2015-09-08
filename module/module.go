@@ -1,4 +1,4 @@
-/**
+/*
  * Ant Worker Project
  *
  * Copyright (c) 2015 Epinion Online Research Team
@@ -31,9 +31,11 @@ package module
 import (
 	. "github.com/epinion-online-research/ant-worker/module/redis"
 	. "github.com/epinion-online-research/ant-worker/module/sqlite"
+	"github.com/epinion-online-research/ant-worker/entity"
 )
 
 type Module struct {
+	Config entity.Config
 	Redis Redis
 	Sql Sqlite
 }

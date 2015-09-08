@@ -31,9 +31,8 @@ package entity
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
+	. "github.com/epinion-online-research/ant-worker/util"
 )
-
-type Json map[string] interface {}
 
 func TestJobSendMailEntity( t *testing.T ) {
 	assert := assert.New(t)

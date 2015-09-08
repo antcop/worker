@@ -26,19 +26,19 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package module
+package util
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
+	"io"
+	"encoding/json"
 )
 
-func TestModule(t *testing.T) {
-	assert := assert.New(t)
-	module := Module {
-		//Config: config
-	}
-	module.Load()
-	assert.Equal("localhost:6379", module.Redis.Server)
-	assert.Equal("/tmp/ant-worker.db", module.Sql.File)
+type Json map[string] interface {}
+
+// Convert string to JSON type
+func ToJson(data io.Reader) Json {
+	decoder := json.NewDecoder(data)
+	var json Json
+	decoder.Decode(&json)
+	return json
 }

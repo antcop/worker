@@ -5,9 +5,9 @@ import (
 )
 
 type JobProcessor struct {
-	Job *entity.Job
+	Job entity.Job
 	Workers []entity.Worker
-	Config *entity.Config
+	Config entity.Config
 }
 
 func ( processor *JobProcessor ) PickWorker() {

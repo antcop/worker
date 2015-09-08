@@ -31,10 +31,10 @@ package api
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
+	. "github.com/epinion-online-research/ant-worker/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
-	"io"
 	"encoding/json"
 	"bytes"
 )
@@ -44,7 +44,6 @@ import (
 var job Job
 
 var router = gin.Default()
-type Json map[string] interface {}
 
 // Create mockup HTTP Request
 func makeMockupRequest(method, url string, data Json) *httptest.ResponseRecorder {
@@ -56,21 +55,13 @@ func makeMockupRequest(method, url string, data Json) *httptest.ResponseRecorder
 	return writer
 }
 
-// Convert string to JSON type
-func toJson(data io.Reader) Json {
-	decoder := json.NewDecoder(data)
-	var json Json
-	decoder.Decode(&json)
-	return json
-}
-
 // GET /test
 func TestJobTest( t *testing.T ) {
 	assert := assert.New(t)
 	router.GET("/api/v1/test", job.Test)
 	response := makeMockupRequest("GET", "/api/v1/test", Json {})
 	assert.NotNil(response)
-	data := toJson(response.Body)
+	data := ToJson(response.Body)
 	assert.NotNil(data)
 	status := data["status"].(bool)
 	assert.Equal(true, status)
@@ -82,7 +73,7 @@ func TestCreateJob(t *testing.T) {
 	router.POST("/api/v1/job", job.Test)
 	response := makeMockupRequest("POST", "/api/v1/job", Json {})
 	assert.NotNil(response)
-	data := toJson(response.Body)
+	data := ToJson(response.Body)
 	assert.NotNil(data)
 	status := data["status"].(bool)
 	assert.Equal(true, status)
@@ -94,7 +85,7 @@ func TestGetAllJob(t *testing.T) {
 	router.GET("/api/v1/job", job.GetAll)
 	response := makeMockupRequest("GET", "/api/v1/job", Json {})
 	assert.NotNil(response)
-	data := toJson(response.Body)
+	data := ToJson(response.Body)
 	assert.NotNil(data)
 	status := data["status"].(bool)
 	assert.Equal(true, status)
@@ -106,7 +97,7 @@ func TestGetJob(t *testing.T) {
 	router.GET("/api/v1/job/:id", job.Get)
 	response := makeMockupRequest("GET", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
-	data := toJson(response.Body)
+	data := ToJson(response.Body)
 	assert.NotNil(data)
 	key := data["job"].(map[string] interface {})["key"]
 	assert.Equal("1234", key)
@@ -118,7 +109,7 @@ func TestUpdateJob(t *testing.T) {
 	router.PUT("/api/v1/job/:id", job.Update)
 	response := makeMockupRequest("PUT", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
-	data := toJson(response.Body)
+	data := ToJson(response.Body)
 	assert.NotNil(data)
 	key := data["job"].(map[string] interface {})["key"]
 	assert.Equal("1234", key)
@@ -130,7 +121,7 @@ func TestParlyUpdateJob(t *testing.T) {
 	router.PATCH("/api/v1/job/:id", job.PartlyUpdate)
 	response := makeMockupRequest("PATCH", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
-	data := toJson(response.Body)
+	data := ToJson(response.Body)
 	assert.NotNil(data)
 	key := data["job"].(map[string] interface {})["key"]
 	assert.Equal("1234", key)
@@ -142,7 +133,7 @@ func TestDeleteJob(t *testing.T) {
 	router.DELETE("/api/v1/job/:id", job.PartlyUpdate)
 	response := makeMockupRequest("DELETE", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
-	data := toJson(response.Body)
+	data := ToJson(response.Body)
 	assert.NotNil(data)
 	key := data["job"].(map[string] interface {})["key"]
 	assert.Equal("1234", key)
