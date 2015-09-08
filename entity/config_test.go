@@ -26,51 +26,15 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package main
+package entity
 
 import (
-	"github.com/epinion-online-research/ant-worker/manager"
-	"github.com/epinion-online-research/ant-worker/api"
-	"github.com/epinion-online-research/ant-worker/entity"
-	. "github.com/epinion-online-research/ant-worker/module"
-	. "github.com/epinion-online-research/ant-worker/daemon"
+	"testing"
+	"github.com/stretchr/testify/assert"
 )
 
-func startService(daemon Daemon) {
-	
-	config, err := entity.LoadConfigFile("")
-	if err != nil {
-		panic(err)
-	}
-	
-	//JobManager
-	manager := manager.JobManager {
-		Observer: make( chan string ),
-		Config: config,
-		Module: Module {
-			Config: config,
-		},
-	}
-	
-	restServer := api.Rest {
-		Port: "2345",
-		JobManager: &manager,
-	}
-
-	restServer.Start()
+func TestConfig( t *testing.T ) {
+	assert := assert.New(t)
+	assert.Equal("test", "test")
 }
 
-func stopService(daemon Daemon) {
-	daemon.Println("Stop Daemon")
-}
-
-func main() {
-	daemon := Daemon {
-		Name: "ant-worker",
-		Description: "Ant-worker",
-		Port : 1234,
-		OnStart: startService,
-		OnStop: stopService,
-	}
-	daemon.RunAsService(true)
-}
