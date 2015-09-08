@@ -42,20 +42,63 @@ type JobManager struct {
 	JobProcessors [] JobProcessor
 }
 
-func (manager *JobManager ) Test() {
-}
-
-func (manager *JobManager ) ExampleAction( ex string ){
-	manager.Observer <- "Example action executed. This is data from rest server: "  + ex
-}
-
-func( manager *JobManager ) CreateJob(job *Job) {
+func( manager *JobManager ) CreateJob(job *Job) (*Job, error) {
 	db := manager.Module.Sql.Db
 	db.Create(&job)
-	//manager.ProcessJob( job )
+	return job, nil
 }
 
-func (manager *JobManager ) ProcessJob( job Job ){
+func( manager *JobManager ) GetJobs(job *Job) (*Job, error) {
+	//db := manager.Module.Sql.Db
+	//db.Create(&job)
+	return job, nil
+}
+
+func( manager *JobManager ) GetJob(job *Job) (*Job, error) {
+	//db := manager.Module.Sql.Db
+	//db.Create(&job)
+	//manager.ProcessJob( job )
+	return job, nil
+}
+
+func( manager *JobManager ) UpdateJob(job *Job) (*Job, error) {
+	//db := manager.Module.Sql.Db
+	//db.Create(&job)
+	//manager.ProcessJob( job )
+	return job, nil
+}
+
+func( manager *JobManager ) ParlyUpdateJob(job *Job) (*Job, error) {
+	//db := manager.Module.Sql.Db
+	//db.Create(&job)
+	//manager.ProcessJob( job )
+	return job, nil
+}
+
+func (manager *JobManager) DeleteJob(job *Job) (*Job, error) {
+	// Stop job
+	// Delete job
+	db := manager.Module.Sql.Db
+	db.Delete(job)
+	return job, nil
+}
+
+func (manager *JobManager) StartJob(job *Job)  (*Job, error) {
+	return job, nil
+}
+
+func (manager *JobManager) PauseJob(job *Job)  (*Job, error) {
+	return job, nil
+}
+
+func (manager *JobManager) ResumeJob(job *Job) (*Job, error) {
+	return job, nil
+}
+func (manager *JobManager) StopJob(job *Job)   (*Job, error) {
+	return job, nil
+}
+
+func (manager *JobManager) ProcessJob(job Job) {
 	processor := JobProcessor {
 		Job: job,
 		Config: manager.Config,
