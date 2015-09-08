@@ -39,7 +39,7 @@ import (
 // Make sure that daemon process works fine
 func TestService(t *testing.T) {
 	assert := assert.New(t)
-	response, err := http.Get("http://localhost:2345/api/v1/test")
+	response, err := http.Get("http://localhost:2468/api/v1/test")
 	assert.Equal(true, err == nil)
 	if err == nil {
 		defer response.Body.Close()

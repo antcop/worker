@@ -26,26 +26,14 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package api
+package manager
 
 import (
-	. "github.com/epinion-online-research/ant-worker/manager"
+	"testing"
+	"github.com/stretchr/testify/assert"
 )
 
-type Rest struct {
-	Bind string
-	Port int
-	Manager Manager
+func TestManager( t *testing.T ) {
+	assert := assert.New(t)
+	assert.Equal("test", "test")
 }
-
-func (rest *Rest) Start(){
-	router := Router{}
-	router.Init(rest)
-	router.RegisterJobs()
-	router.Listen()
-}
-
-func (rest *Rest) Stop(){
-
-}
-

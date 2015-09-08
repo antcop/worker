@@ -26,50 +26,14 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package main
+package manager
 
 import (
-	. "github.com/epinion-online-research/ant-worker/manager"
-	"github.com/epinion-online-research/ant-worker/api"
-	//"github.com/epinion-online-research/ant-worker/entity"
-	. "github.com/epinion-online-research/ant-worker/module/daemon"
 	. "github.com/epinion-online-research/ant-worker/module"
 )
 
-func startService(daemon Daemon) {
-	
-	manager := daemon.Manager
-	restServer := api.Rest {
-		Port: manager.Job.Module.Config.Port,
-		Manager: manager,
-	}
-	restServer.Start()
-}
-
-func stopService(daemon Daemon) {
-	daemon.Println("Stop Daemon")
-}
-
-func main() {
-	module := Module {}
-	// Loading standard modules
-	module.Load()
-	manager := Manager {}
-	// Inject modules for managers can access global resources
-	manager.Job = JobManager {
-		Module: module,
-	}
-	manager.Worker = WorkerManager {
-		Module: module,
-	}
-	// Daemon process as linux service
-	Daemon {
-		Name: module.Config.Name,
-		Description: module.Config.Description,
-		Bind: module.Config.Bind,
-		Port: module.Config.Port,
-		OnStart: startService,
-		OnStop: stopService,
-		Manager: manager,
-	}.RunAsService(true)
+type Manager struct {
+	Job JobManager
+	Worker WorkerManager
+	Module Module
 }

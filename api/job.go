@@ -39,7 +39,7 @@ import (
 const MaxListJob int = 20
 
 type Job struct {
-	manager *manager.JobManager
+	manager manager.JobManager
 }
 
 // GET /test

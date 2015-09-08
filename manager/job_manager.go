@@ -37,7 +37,6 @@ type Json map[string] interface {}
 
 type JobManager struct {
 	Observer chan string
-	Config Config
 	Module Module
 	JobProcessors [] JobProcessor
 }
@@ -101,7 +100,7 @@ func (manager *JobManager) StopJob(job *Job)   (*Job, error) {
 func (manager *JobManager) ProcessJob(job Job) {
 	processor := JobProcessor {
 		Job: job,
-		Config: manager.Config,
+		Config: manager.Module.Config,
 	}
 	//append( manager.JobProcessors, processor)
 	go processor.Process()

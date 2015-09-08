@@ -53,7 +53,6 @@ func buildRequest(method string, url string, entity interface{}) (*http.Request,
 	if err != nil {
 		return nil, err
 	}
-
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return req, err

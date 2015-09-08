@@ -32,6 +32,7 @@ import (
 	"os"
 	"log"
 	"github.com/kardianos/service"
+	. "github.com/epinion-online-research/ant-worker/manager"
 )
 
 var logger service.Logger
@@ -39,9 +40,11 @@ var logger service.Logger
 type Daemon struct {
 	Name string
 	Description string
+	Bind string
 	Port int
 	OnStart func(daemon Daemon)
 	OnStop func(daemon Daemon)
+	Manager Manager
 }
 
 func (daemon Daemon) Println(message string) {
@@ -54,6 +57,10 @@ func (daemon Daemon) GetName() string {
 
 func (daemon Daemon) GetDescription() string {
 	return daemon.Description
+}
+
+func (daemon Daemon) GetBind() string {
+	return daemon.Bind
 }
 
 func (daemon Daemon) GetPort() int {

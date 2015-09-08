@@ -26,38 +26,12 @@
  *     Loi Nguyen       <loint@penlook.com>
  */
 
-package daemon
+package manager
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
+	. "github.com/epinion-online-research/ant-worker/module"
 )
 
-func getDaemon() Daemon {
-	return Daemon {
-		Name: "job",
-		Description: "Job server",
-		Port : 1234,
-		OnStart: func(daemon Daemon) {
-			daemon.Println("Start")
-		},
-		OnStop: func(daemon Daemon) {
-			daemon.Println("Stop")
-		},
-	}
-}
-
-func TestDaemonConstructor(t *testing.T) {
-	assert := assert.New(t)
-	daemon := getDaemon()
-	assert.Equal(daemon.GetName(), "job")
-	assert.Equal(daemon.GetDescription(), "Job server")
-	assert.Equal(daemon.GetPort(), 1234)
-}
-
-func TestDaemonRun(t *testing.T) {
-	assert := assert.New(t)
-	//daemon := getDaemon()
-	//daemon.RunAsService(true)
-	assert.Equal("Hello", "Hello")
+type WorkerManager struct {
+	Module Module
 }

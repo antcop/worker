@@ -32,19 +32,20 @@ import (
 	"github.com/gin-gonic/gin"
 	//"github.com/epinion-online-research/ant-worker/entity"
 	//"net/http"
+	"strconv"
 	"github.com/epinion-online-research/ant-worker/manager"
 )
 
 type Router struct {
 	engine  *gin.Engine
 	rest    *Rest
-	manager *manager.JobManager
+	manager manager.Manager
 }
 
 func (router *Router ) Init (rest *Rest) {
 	router.engine = gin.Default()
 	router.rest = rest
-	router.manager = rest.JobManager
+	router.manager = rest.Manager
 }
 /*
 type Json struct {
@@ -54,7 +55,7 @@ type Json struct {
 
 func (router *Router) RegisterJobs( ) {
 	job := Job {
-		manager: router.manager,
+		manager: router.manager.Job,
 	}
 	// Example
 	router.engine.GET("/api/v1/test", job.Test)
@@ -73,5 +74,5 @@ func (router *Router) RegisterJobs( ) {
 }
 
 func (router Router) Listen() {
-	router.engine.Run( ":" + router.rest.Port)
+	router.engine.Run(router.rest.Bind + ":" + strconv.Itoa(router.rest.Port))
 }
