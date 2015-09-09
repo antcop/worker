@@ -54,7 +54,7 @@ type Json struct {
 }*/
 
 func (router *Router) RegisterJobs( ) {
-	job := Job {
+	job := JobHandler {
 		manager: router.manager.Job,
 	}
 	// Example

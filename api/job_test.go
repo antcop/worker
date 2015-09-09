@@ -41,7 +41,7 @@ import (
 
 // END POINT TESTING
 
-var job Job
+var handler JobHandler
 
 var router = gin.Default()
 
@@ -58,7 +58,7 @@ func makeMockupRequest(method, url string, data Json) *httptest.ResponseRecorder
 // GET /test
 func TestJobTest( t *testing.T ) {
 	assert := assert.New(t)
-	router.GET("/api/v1/test", job.Test)
+	router.GET("/api/v1/test", handler.Test)
 	response := makeMockupRequest("GET", "/api/v1/test", Json {})
 	assert.NotNil(response)
 	data := ToJson(response.Body)
@@ -70,7 +70,7 @@ func TestJobTest( t *testing.T ) {
 // POST api/v1/job
 func TestCreateJob(t *testing.T) {
 	assert := assert.New(t)
-	router.POST("/api/v1/job", job.Test)
+	router.POST("/api/v1/job", handler.Test)
 	response := makeMockupRequest("POST", "/api/v1/job", Json {})
 	assert.NotNil(response)
 	data := ToJson(response.Body)
@@ -82,7 +82,7 @@ func TestCreateJob(t *testing.T) {
 // GET api/v1/job
 func TestGetAllJob(t *testing.T) {
 	assert := assert.New(t)
-	router.GET("/api/v1/job", job.GetAll)
+	router.GET("/api/v1/job", handler.GetAll)
 	response := makeMockupRequest("GET", "/api/v1/job", Json {})
 	assert.NotNil(response)
 	data := ToJson(response.Body)
@@ -94,7 +94,7 @@ func TestGetAllJob(t *testing.T) {
 // GET api/v1/job/:id
 func TestGetJob(t *testing.T) {
 	assert := assert.New(t)
-	router.GET("/api/v1/job/:id", job.Get)
+	router.GET("/api/v1/job/:id", handler.Get)
 	response := makeMockupRequest("GET", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
 	data := ToJson(response.Body)
@@ -106,7 +106,7 @@ func TestGetJob(t *testing.T) {
 // PUT api/v1/job/:id
 func TestUpdateJob(t *testing.T) {
 	assert := assert.New(t)
-	router.PUT("/api/v1/job/:id", job.Update)
+	router.PUT("/api/v1/job/:id", handler.Update)
 	response := makeMockupRequest("PUT", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
 	data := ToJson(response.Body)
@@ -118,7 +118,7 @@ func TestUpdateJob(t *testing.T) {
 // PATCH api/v1/job/:id
 func TestParlyUpdateJob(t *testing.T) {
 	assert := assert.New(t)
-	router.PATCH("/api/v1/job/:id", job.PartlyUpdate)
+	router.PATCH("/api/v1/job/:id", handler.PartlyUpdate)
 	response := makeMockupRequest("PATCH", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
 	data := ToJson(response.Body)
@@ -130,7 +130,7 @@ func TestParlyUpdateJob(t *testing.T) {
 // DELETE api/v1/job/:id
 func TestDeleteJob(t *testing.T) {
 	assert := assert.New(t)
-	router.DELETE("/api/v1/job/:id", job.PartlyUpdate)
+	router.DELETE("/api/v1/job/:id", handler.PartlyUpdate)
 	response := makeMockupRequest("DELETE", "/api/v1/job/1234", Json {})
 	assert.NotNil(response)
 	data := ToJson(response.Body)

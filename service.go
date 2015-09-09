@@ -31,7 +31,6 @@ package main
 import (
 	. "github.com/epinion-online-research/ant-worker/manager"
 	"github.com/epinion-online-research/ant-worker/api"
-	//"github.com/epinion-online-research/ant-worker/entity"
 	. "github.com/epinion-online-research/ant-worker/module/daemon"
 	. "github.com/epinion-online-research/ant-worker/module"
 )
@@ -51,10 +50,10 @@ func stopService(daemon Daemon) {
 }
 
 func main() {
+	manager := Manager {}
 	module := Module {}
 	// Loading standard modules
 	module.Load()
-	manager := Manager {}
 	// Inject modules for managers can access global resources
 	manager.Job = JobManager {
 		Module: module,

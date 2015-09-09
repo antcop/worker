@@ -28,11 +28,35 @@
 
 package entity
 
-type Job struct {
+type JobApi struct {
 	Name string
 	Type string
 	Description string
+	Callback string
 	Endpoint map[string] interface {}
 	Params map[string] interface {}
 	Workload []map[string] interface {}
+}
+
+type EndPoint struct {
+	Id int
+	Url string
+	Method string
+	Data string
+}
+
+type Workload struct {
+	Id int
+	Data string
+}
+
+type Job struct {
+	Id int
+	Name string
+	Type string
+	Description string
+	Callback string
+	EndPoint EndPoint `gorm:"many2many:job_endpoint;"`
+	Params string
+	Workload []Workload `gorm:"many2many:job_workloads;"`
 }

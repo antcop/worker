@@ -31,9 +31,79 @@ package manager
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
+	. "github.com/epinion-online-research/ant-worker/module"
+	"github.com/epinion-online-research/ant-worker/entity"
 )
 
 func TestCreateJob( t *testing.T ) {
 	assert := assert.New(t)
 	assert.Equal("test", "test")
+
+	data := entity.JobApi {
+		Name: "sendmail",
+		Description: "Send Email By Using MailChimp",
+		Type: "api_call",
+		Callback: "http://example.com/callback",
+	}
+
+	/*
+	newJob :=  {
+		
+		Endpoint: Json {
+			"url" : "http://mailchimp.com/api/v1/",
+			"method": "GET", // "POST"
+			"data": Json {
+				"sender": "root@localhost",
+				"receiver": "",
+				"user_activation": "Dear, {{ name }}, \n",
+			},
+		},
+		Workload: []map[string] interface{} {
+			Json {
+				"user_activation": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+				"user_redemption": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+			},
+			Json {
+				"user_activation": Json {
+					"id" : 123457,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+				"user_redemption": Json {
+					"id" : 123456,
+					"email": "nguyen.trung.loi@epinion.dk",
+					"name": "Loi",
+				},
+			},
+		},
+	}*/
+	
+	module := Module {}
+	module.Load()
+	manager := JobManager {
+		Module: module,
+	}
+	job, err := manager.Create(data)
+	assert.Equal(true, err == nil)
+	assert.Equal("sendmail", job.Name)
+	assert.Equal("Send Email By Using MailChimp", job.Description)
+	assert.Equal("api_call", job.Type)
+	assert.Equal("http://example.com/callback", job.Callback)
+	
+	var jobRecord entity.Job
+	db := module.Sql.Db
+	db.First(&jobRecord)
+	// Make sure everything is up to date
+	assert.Equal(jobRecord.Name, job.Name)
+	assert.Equal(jobRecord.Description, job.Description)
+	assert.Equal(jobRecord.Type, job.Type)
+	assert.Equal(jobRecord.Callback, job.Callback)
 }

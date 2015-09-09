@@ -29,7 +29,7 @@
 package manager
 
 import (
-	. "github.com/epinion-online-research/ant-worker/entity"
+	"github.com/epinion-online-research/ant-worker/entity"
 	. "github.com/epinion-online-research/ant-worker/module"
 )
 
@@ -41,63 +41,86 @@ type JobManager struct {
 	JobProcessors [] JobProcessor
 }
 
-func( manager *JobManager ) CreateJob(job *Job) (*Job, error) {
+func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
 	db := manager.Module.Sql.Db
+	job := entity.Job {
+		Name: data.Name,
+		Description: data.Description,
+		Type: data.Type,
+		Callback: data.Callback,
+	}
 	db.Create(&job)
-	return job, nil
+	return &job, nil
 }
 
-func( manager *JobManager ) GetJobs(job *Job) (*Job, error) {
+func( manager *JobManager ) GetAll(data entity.JobApi) ([]entity.Job, error) {
 	//db := manager.Module.Sql.Db
 	//db.Create(&job)
-	return job, nil
+	jobs := [] entity.Job {
+	}
+	return jobs, nil
 }
 
-func( manager *JobManager ) GetJob(job *Job) (*Job, error) {
-	//db := manager.Module.Sql.Db
-	//db.Create(&job)
-	//manager.ProcessJob( job )
-	return job, nil
-}
-
-func( manager *JobManager ) UpdateJob(job *Job) (*Job, error) {
+func( manager *JobManager ) Get(data entity.JobApi) (entity.Job, error) {
 	//db := manager.Module.Sql.Db
 	//db.Create(&job)
 	//manager.ProcessJob( job )
+	job := entity.Job {
+	}
 	return job, nil
 }
 
-func( manager *JobManager ) ParlyUpdateJob(job *Job) (*Job, error) {
+func( manager *JobManager ) Update(data entity.JobApi) (entity.Job, error) {
 	//db := manager.Module.Sql.Db
 	//db.Create(&job)
 	//manager.ProcessJob( job )
+	job := entity.Job {
+	}
 	return job, nil
 }
 
-func (manager *JobManager) DeleteJob(job *Job) (*Job, error) {
+func( manager *JobManager ) ParlyUpdate(data entity.JobApi) (entity.Job, error) {
+	//db := manager.Module.Sql.Db
+	//db.Create(&job)
+	//manager.ProcessJob( job )
+	job := entity.Job {
+	}
+	return job, nil
+}
+
+func (manager *JobManager) Delete(data entity.JobApi) (entity.Job, error) {
 	// Stop job
 	// Delete job
-	db := manager.Module.Sql.Db
-	db.Delete(job)
+	job := entity.Job {
+	}
 	return job, nil
 }
 
-func (manager *JobManager) StartJob(job *Job)  (*Job, error) {
+func (manager *JobManager) Start(data entity.JobApi)  (entity.Job, error) {
+	job := entity.Job {
+	}
 	return job, nil
 }
 
-func (manager *JobManager) PauseJob(job *Job)  (*Job, error) {
+func (manager *JobManager) Pause(data entity.JobApi)  (entity.Job, error) {
+	job := entity.Job {
+	}
 	return job, nil
 }
 
-func (manager *JobManager) ResumeJob(job *Job) (*Job, error) {
-	return job, nil
-}
-func (manager *JobManager) StopJob(job *Job)   (*Job, error) {
+func (manager *JobManager) Resume(data entity.JobApi) (entity.Job, error) {
+	job := entity.Job {
+	}
 	return job, nil
 }
 
-func (manager *JobManager) ProcessJob(job Job) {
+func (manager *JobManager) Stop(data entity.JobApi) (entity.Job, error) {
+	job := entity.Job {
+	}
+	return job, nil
+}
+
+func (manager *JobManager) Process(job entity.Job) {
 	processor := JobProcessor {
 		Job: job,
 		Config: manager.Module.Config,
