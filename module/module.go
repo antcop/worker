@@ -69,6 +69,8 @@ func LoadConfig(configPath string) Config {
 		cfg.Load(configPath, data)
 	}
 	return Config {
+		User:           getStrValue(data, "username", "user"),
+		Password:       getStrValue(data, "password", "password"),
 		Name:           getStrValue(data, "name", "ant-worker"),
 		Description:    getStrValue(data, "description", "Simple job service"),
 		Bind :          getStrValue(data, "bind", "0.0.0.0"),

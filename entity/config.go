@@ -1,6 +1,8 @@
 package entity
 
 type Config struct {
+	User string
+	Password string
 	Name string
 	Description string
 	Bind string
