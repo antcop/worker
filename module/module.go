@@ -85,10 +85,10 @@ func LoadConfig(configPath string) Config {
 }
 
 // Load modules for service
-func (mod *Module) Load() {
+func (mod *Module) Load(configPath string) {
 	// Configuration
 	// TODO - Fix config path
-	mod.Config = LoadConfig("/etc/init/ant-worker.conf")
+	mod.Config = LoadConfig(configPath)
 	// Redis server
 	mod.Redis = Redis {
 		Server: mod.Config.RedisHost + ":" + strconv.Itoa(mod.Config.RedisPort),

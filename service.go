@@ -53,7 +53,7 @@ func main() {
 	manager := Manager {}
 	module := Module {}
 	// Loading standard modules
-	module.Load()
+	module.Load("/etc/init/ant-worker.conf")
 	// Inject modules for managers can access global resources
 	manager.Job = JobManager {
 		Module: module,

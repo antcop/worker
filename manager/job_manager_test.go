@@ -32,64 +32,66 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	. "github.com/epinion-online-research/ant-worker/module"
-	"github.com/epinion-online-research/ant-worker/entity"
+	 "github.com/epinion-online-research/ant-worker/entity"
+	 "os"
 )
 
-func TestCreateJob( t *testing.T ) {
+func TestJobCrudCycle(t *testing.T) {
 	assert := assert.New(t)
-	assert.Equal("test", "test")
+	// Setup module
+	module := Module {}
+	pwd := os.Getenv("PWD")
+	configFile := pwd + "/../test.conf"
+	_, err := os.Stat(configFile)
+	assert.Nil(err)
+	module.Load(configFile)
+	manager := JobManager {
+		Module: module,
+	}
+	// Setup job table
+	SetupJob(assert, manager)
+	// Create first job
+	job1 := CreateJob(assert, manager)
+	assert.Equal("sendmail", job1.Name)
+	assert.Equal(1, job1.Id)
+	// Create second job
+	job2 := CreateJob(assert, manager)
+	assert.Equal("sendmail", job2.Name)
+	assert.Equal(2, job2.Id)
+	// Get all jobs
+	jobs := GetAllJobs(assert, manager)
+	assert.Equal(2, len(jobs))
+	// Partly update job
+	//jobs := GetAllJobs(assert, manager)
+	//assert.Equal(2, len(jobs))
+	// Update job
+	//jobs := GetAllJobs(assert, manager)
+	//assert.Equal(2, len(jobs))
+	// Delete job
+	//jobs := DeleteJob(assert, manager)
+	// Teardown job
+	TeardownJob(assert, manager)
+}
 
+func SetupJob(assert *assert.Assertions, manager JobManager) {
+	db := manager.Module.Sql.Db
+	db.CreateTable(&entity.Job{})
+	count := 1
+	db.Model(entity.Job{}).Count(&count)
+	assert.Equal(0, count)
+}
+
+func TeardownJob(assert *assert.Assertions, manager JobManager) {
+	db := manager.Module.Sql.Db
+	db.DropTable(&entity.Job{})
+}
+
+func CreateJob(assert *assert.Assertions, manager JobManager) (*entity.Job) {
 	data := entity.JobApi {
 		Name: "sendmail",
 		Description: "Send Email By Using MailChimp",
 		Type: "api_call",
 		Callback: "http://example.com/callback",
-	}
-
-	/*
-	newJob :=  {
-		
-		Endpoint: Json {
-			"url" : "http://mailchimp.com/api/v1/",
-			"method": "GET", // "POST"
-			"data": Json {
-				"sender": "root@localhost",
-				"receiver": "",
-				"user_activation": "Dear, {{ name }}, \n",
-			},
-		},
-		Workload: []map[string] interface{} {
-			Json {
-				"user_activation": Json {
-					"id" : 123456,
-					"email": "nguyen.trung.loi@epinion.dk",
-					"name": "Loi",
-				},
-				"user_redemption": Json {
-					"id" : 123456,
-					"email": "nguyen.trung.loi@epinion.dk",
-					"name": "Loi",
-				},
-			},
-			Json {
-				"user_activation": Json {
-					"id" : 123457,
-					"email": "nguyen.trung.loi@epinion.dk",
-					"name": "Loi",
-				},
-				"user_redemption": Json {
-					"id" : 123456,
-					"email": "nguyen.trung.loi@epinion.dk",
-					"name": "Loi",
-				},
-			},
-		},
-	}*/
-	
-	module := Module {}
-	module.Load()
-	manager := JobManager {
-		Module: module,
 	}
 	job, err := manager.Create(data)
 	assert.Equal(true, err == nil)
@@ -97,13 +99,40 @@ func TestCreateJob( t *testing.T ) {
 	assert.Equal("Send Email By Using MailChimp", job.Description)
 	assert.Equal("api_call", job.Type)
 	assert.Equal("http://example.com/callback", job.Callback)
-	
 	var jobRecord entity.Job
-	db := module.Sql.Db
+	db := manager.Module.Sql.Db
 	db.First(&jobRecord)
 	// Make sure everything is up to date
 	assert.Equal(jobRecord.Name, job.Name)
 	assert.Equal(jobRecord.Description, job.Description)
 	assert.Equal(jobRecord.Type, job.Type)
 	assert.Equal(jobRecord.Callback, job.Callback)
+	return job
+}
+
+func GetAllJobs(assert *assert.Assertions, manager JobManager) ([] entity.Job) {
+	db := manager.Module.Sql.Db
+	var jobs []entity.Job
+	db.Select("*").Find(&jobs)
+	return jobs
+}
+
+func GetJob(assert *assert.Assertions, manager JobManager) (entity.Job) {
+	var job entity.Job
+	return job
+}
+
+func PartlyUpdateJob(assert *assert.Assertions, manager JobManager) (entity.Job) {
+	var job entity.Job
+	return job
+}
+
+func UpdateJob(assert *assert.Assertions, manager JobManager) (entity.Job) {
+	var job entity.Job
+	return job
+}
+
+func DeleteJob(assert *assert.Assertions, manager JobManager) (entity.Job) {
+	var job entity.Job
+	return job
 }

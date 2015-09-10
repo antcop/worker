@@ -43,6 +43,7 @@ type JobManager struct {
 
 func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
 	db := manager.Module.Sql.Db
+	
 	job := entity.Job {
 		Name: data.Name,
 		Description: data.Description,
