@@ -40,7 +40,7 @@ import (
 const MaxListJob int = 20
 
 type JobHandler struct {
-	manager manager.JobManager
+	job manager.JobManager
 }
 
 // GET /test
@@ -52,13 +52,12 @@ func (handler JobHandler) Test(context *gin.Context) {
 func (handler JobHandler) Create(context *gin.Context) {
 	var jobData entity.JobApi
 	if context.BindJSON(&jobData) == nil {
-		job, err := handler.manager.Create(jobData)
+		job, err := handler.job.Create(jobData)
 		if err != nil {
 			handler.Error(context, http.StatusOK, 1200, "Internal Server Error")
 			return
 		}
 		context.JSON(http.StatusOK, gin.H {
-			"status": true,
 			"id": job.Id,
 			"location": "http://localhost/api/job/v1/" + strconv.Itoa(job.Id),
 		})
@@ -69,72 +68,57 @@ func (handler JobHandler) Create(context *gin.Context) {
 
 // GET /api/v1/job
 func (handler JobHandler) GetAll(context *gin.Context ) {
-	var jobList = make([]gin.H, 20)
-	for i:=0; i<=100; i++ {
-		jobList = append(jobList, gin.H {
-			"key" : "12355",
-			"name" : " Do some thing",
-			"status" : 1,
-			"progress" : 90,
-			"estimate" : 25,
+	jobs, err := handler.job.GetAll()
+	if err != nil {
+		handler.Error(context, http.StatusOK, 1200, "Internal Server Error")
+		return
+	}
+	listJob := make([]gin.H, 20)
+	for i:=0; i<len(jobs); i++ {
+		job := jobs[i]
+		listJob = append(listJob, gin.H {
+			"id": job.Id,
+			"name": job.Name,
+			"location": "http://localhost/api/job/v1/" + strconv.Itoa(job.Id),
 		})
 	}
-	context.JSON(200, gin.H {
-		"status": true,
-		"jobs": jobList,
-	})
+	context.JSON(http.StatusOK, listJob)
 }
 
 // GET /api/v1/job/:id
 func (handler JobHandler) Get(context *gin.Context) {
 	context.JSON(200, gin.H {
-		"status": false,
-		"job": gin.H {
-			"key" : context.Param("id"),
-			"name" : " Do some thing",
-			"status": 1,
-			"progress": 90,
-			"estimate": 25,
-		},
+		"key" : context.Param("id"),
+		"name" : " Do some thing",
+		"status": 1,
+		"progress": 90,
+		"estimate": 25,
 	})
 }
 
 func (handler JobHandler) Update(context *gin.Context) {
 	context.JSON(200, gin.H {
-		"status": false,
-		"job": gin.H {
-			"key" : context.Param("id"),
-			"name" : " Do some thing",
-			"status": 1,
-			"progress": 90,
-			"estimate": 25,
-		},
+		"key" : context.Param("id"),
+		"name" : " Do some thing",
+		"status": 1,
+		"progress": 90,
+		"estimate": 25,
 	})
 }
 
 func (handler JobHandler) PartlyUpdate(context *gin.Context) {
 	context.JSON(200, gin.H {
-		"status": false,
-		"job": gin.H {
-			"key" : context.Param("id"),
-			"name" : " Do some thing",
-			"status": 1,
-			"progress": 90,
-			"estimate": 25,
-		},
+		"key" : context.Param("id"),
+		"name" : " Do some thing",
+		"status": 1,
+		"progress": 90,
+		"estimate": 25,
 	})
 }
 
 func (handler JobHandler) Delete(context *gin.Context) {
 	context.JSON(200, gin.H {
-		"status": false,
-		"job": gin.H {
-			"key" : context.Param("id"),
-			"name" : " Do some thing",
-			"status": 1,
-			"progress": 90,
-			"estimate": 25,
-		},
+		"status": true,
 	})
 }
 

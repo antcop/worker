@@ -66,8 +66,8 @@ func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
 
 func( manager *JobManager ) GetAll() ([]entity.Job, error) {
 	db := manager.Module.Sql.Db
-	jobs := [] entity.Job
-	db.Select("*").Where("id = ?", jobId).Find(&job)
+	var jobs []entity.Job
+	db.Find(&jobs)
 	return jobs, nil
 }
 
@@ -78,10 +78,10 @@ func (manager *JobManager) Get(jobId int) (entity.Job, error) {
 	return job, nil
 }
 
-func( manager *JobManager ) Update(data entity.JobApi) (entity.Job, error) {
+func( manager *JobManager ) Update(jobId int, data entity.JobApi) (entity.Job, error) {
 	var job entity.Job
 	db := manager.Module.Sql.Db
-	db.Select("*").Where("id = ?", data.Id).Find(&jobs)
+	db.Select("*").Where("id = ?", jobId).First(&job)
 
 	job.Name = data.Name
 	job.Description = data.Description
@@ -104,44 +104,64 @@ func (manager *JobManager) Delete(jobId int) error {
 	return nil
 }
 
-func (manager *JobManager) Start(jobId int)  (entity.Job, error) {
-	job := manager.Get(jobId)
+func (manager *JobManager) Start(jobId int)  (error) {
+	job, err := manager.Get(jobId)
+	if err != nil {
+		return err
+	}
 	job.Status = STATUS_PROGRESS
 	job.Progress = 0
-	manager.Update(job)
-	return job, nil
+	db := manager.Module.Sql.Db
+	db.Save(&job)
+	return nil
 }
 
-func (manager *JobManager) Pause(jobId int)  (entity.Job, error) {
-	job := manager.Get(jobId)
+func (manager *JobManager) Pause(jobId int)  (error) {
+	job, err := manager.Get(jobId)
+	if err != nil {
+		return err
+	}
 	job.Status = STATUS_PAUSED
 	// job.Progress is not changed
-	manager.Update(job)
-	return job, nil
+	db := manager.Module.Sql.Db
+	db.Save(&job)
+	return nil
 }
 
-func (manager *JobManager) Resume(jobId int) (entity.Job, error) {
-	job := manager.Get(jobId)
+func (manager *JobManager) Resume(jobId int) (error) {
+	job, err := manager.Get(jobId)
+	if err != nil {
+		return err
+	}
 	job.Status = STATUS_PROGRESS
 	// job.Progress is not changed
-	manager.Update(job)
-	return job, nil
+	db := manager.Module.Sql.Db
+	db.Save(&job)
+	return nil
 }
 
-func (manager *JobManager) Stop(jobId int) (entity.Job, error) {
-	job := manager.Get(jobId)
+func (manager *JobManager) Stop(jobId int) (error) {
+	job, err := manager.Get(jobId)
+	if err != nil {
+		return err
+	}
 	job.Status = STATUS_STOPPED
 	// job.Progress is not changed
-	manager.Update(job)
-	return job, nil
+	db := manager.Module.Sql.Db
+	db.Save(&job)
+	return nil
 }
 
-func (manager *JobManager) Finish(jobId int) (entity.Job, error) {
-	job := manager.Get(jobId)
+func (manager *JobManager) Finish(jobId int) (error) {
+	job, err := manager.Get(jobId)
+	if err != nil {
+		return err
+	}
 	job.Status   = STATUS_FINISHED
-	job.Progress = PROGRESS_COMPLETE
-	manager.Update(job)
-	return job, nil
+	job.Progress = PROGRESS_DONE
+	db := manager.Module.Sql.Db
+	db.Save(&job)
+	return nil
 }
 
 func (manager *JobManager) Process(job entity.Job) {

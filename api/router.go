@@ -55,7 +55,7 @@ type Json struct {
 
 func (router *Router) RegisterJobs( ) {
 	job := JobHandler {
-		manager: router.manager.Job,
+		job: router.manager.Job,
 	}
 	// Example
 	router.engine.GET("/api/v1/test", job.Test)

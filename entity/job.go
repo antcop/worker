@@ -45,9 +45,11 @@ type EndPoint struct {
 	Data string
 }
 
+type WorkloadUnit map[string] interface {}
+
 type Workload struct {
 	Id int
-	Data string
+	Data [] WorkloadUnit
 }
 
 type Job struct {
