@@ -56,6 +56,8 @@ type Job struct {
 	Type string
 	Description string
 	Callback string
+	Status int
+	Progress int
 	EndPoint EndPoint `gorm:"many2many:job_endpoint;"`
 	Params string
 	Workload []Workload `gorm:"many2many:job_workloads;"`

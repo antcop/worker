@@ -41,6 +41,16 @@ type JobManager struct {
 	JobProcessors [] JobProcessor
 }
 
+const STATUS_CREATED  int = 1;
+const STATUS_PAUSED   int = 2;
+const STATUS_STOPPED  int = 3;
+const STATUS_PENDING  int = 4;
+const STATUS_PROGRESS int = 5;
+const STATUS_FINISHED int = 6;
+
+const PROGRESS_START  int = 1;
+const PROGRESS_DONE   int = 2;
+
 func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
 	db := manager.Module.Sql.Db
 	job := entity.Job {
@@ -48,24 +58,23 @@ func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
 		Description: data.Description,
 		Type: data.Type,
 		Callback: data.Callback,
+		Status: STATUS_CREATED,
 	}
 	db.Create(&job)
 	return &job, nil
 }
 
-func( manager *JobManager ) GetAll(data entity.JobApi) ([]entity.Job, error) {
-	//db := manager.Module.Sql.Db
-	//db.Create(&job)
-	jobs := [] entity.Job {
-	}
+func( manager *JobManager ) GetAll() ([]entity.Job, error) {
+	db := manager.Module.Sql.Db
+	jobs := [] entity.Job
+	db.Select("*").Where("id = ?", jobId).Find(&job)
 	return jobs, nil
 }
 
-func( manager *JobManager ) Get(data entity.JobApi) (entity.Job, error) {
-	//db := manager.Module.Sql.Db
-	//db.Create(&job)
-	//manager.ProcessJob( job )
-	db.Select("*").Where("id = ?", jobId).Find(&jobs)
+func (manager *JobManager) Get(jobId int) (entity.Job, error) {
+	db := manager.Module.Sql.Db
+	var job entity.Job
+	db.Select("*").Where("id = ?", jobId).Find(&job)
 	return job, nil
 }
 
@@ -83,10 +92,10 @@ func( manager *JobManager ) Update(data entity.JobApi) (entity.Job, error) {
 	return job, nil
 }
 
-func( manager *JobManager ) ParlyUpdate(data entity.JobApi) (entity.Job, error) {
-	
+/*
+func( manager *JobManager ) ParlyUpdate(data entity.JobApi) (entity.Job, error) {	
 	return job, nil
-}
+}*/
 
 func (manager *JobManager) Delete(jobId int) error {
 	var job entity.Job
@@ -95,27 +104,43 @@ func (manager *JobManager) Delete(jobId int) error {
 	return nil
 }
 
-func (manager *JobManager) Start(data entity.JobApi)  (entity.Job, error) {
-	job := entity.Job {
-	}
+func (manager *JobManager) Start(jobId int)  (entity.Job, error) {
+	job := manager.Get(jobId)
+	job.Status = STATUS_PROGRESS
+	job.Progress = 0
+	manager.Update(job)
 	return job, nil
 }
 
-func (manager *JobManager) Pause(data entity.JobApi)  (entity.Job, error) {
-	job := entity.Job {
-	}
+func (manager *JobManager) Pause(jobId int)  (entity.Job, error) {
+	job := manager.Get(jobId)
+	job.Status = STATUS_PAUSED
+	// job.Progress is not changed
+	manager.Update(job)
 	return job, nil
 }
 
-func (manager *JobManager) Resume(data entity.JobApi) (entity.Job, error) {
-	job := entity.Job {
-	}
+func (manager *JobManager) Resume(jobId int) (entity.Job, error) {
+	job := manager.Get(jobId)
+	job.Status = STATUS_PROGRESS
+	// job.Progress is not changed
+	manager.Update(job)
 	return job, nil
 }
 
-func (manager *JobManager) Stop(data entity.JobApi) (entity.Job, error) {
-	job := entity.Job {
-	}
+func (manager *JobManager) Stop(jobId int) (entity.Job, error) {
+	job := manager.Get(jobId)
+	job.Status = STATUS_STOPPED
+	// job.Progress is not changed
+	manager.Update(job)
+	return job, nil
+}
+
+func (manager *JobManager) Finish(jobId int) (entity.Job, error) {
+	job := manager.Get(jobId)
+	job.Status   = STATUS_FINISHED
+	job.Progress = PROGRESS_COMPLETE
+	manager.Update(job)
 	return job, nil
 }
 

@@ -52,23 +52,16 @@ func TestJobCrudCycle(t *testing.T) {
 	SetupJob(assert, manager)
 	// Create first job
 	job1 := CreateJob(assert, manager)
-	assert.Equal("sendmail", job1.Name)
-	assert.Equal(1, job1.Id)
 	// Create second job
 	job2 := CreateJob(assert, manager)
-	assert.Equal("sendmail", job2.Name)
-	assert.Equal(2, job2.Id)
 	// Get all jobs
-	jobs := GetAllJobs(assert, manager)
-	assert.Equal(2, len(jobs))
-	// Partly update job
-	job := UpdateJob(assert, manager, job.Id)
-	//assert.Equal(2, len(jobs))
-	// Update job
-	//jobs := GetAllJobs(assert, manager)
-	//assert.Equal(2, len(jobs))
-	// Delete job
-	//jobs := DeleteJob(assert, manager)
+	GetAllJobs(assert, manager)
+	// Get job1
+	GetJob(assert, manager, job1.Id)
+	// Partly update job 1
+	UpdateJob(assert, manager, job1.Id)
+	// Delete 2 jobs
+	DeleteJob(assert, manager, job1.Id, job2.Id)
 	// Teardown job
 	TeardownJob(assert, manager)
 }
@@ -94,48 +87,60 @@ func CreateJob(assert *assert.Assertions, manager JobManager) (*entity.Job) {
 		Callback: "http://example.com/callback",
 	}
 	job, err := manager.Create(data)
+	// There is no error
+	assert.Equal(true, err == nil)
+	return job
+}
+
+func GetAllJobs(assert *assert.Assertions, manager JobManager) [] entity.Job {
+	jobs, err := manager.GetAll()
+	assert.Equal(true, err == nil)
+	// Count number of job
+	assert.Equal(2, len(jobs))
+	return jobs
+}
+
+func GetJob(assert *assert.Assertions, manager JobManager, jobId int) entity.Job {
+	job, err := manager.Get(jobId)
 	assert.Equal(true, err == nil)
 	assert.Equal("sendmail", job.Name)
 	assert.Equal("Send Email By Using MailChimp", job.Description)
 	assert.Equal("api_call", job.Type)
 	assert.Equal("http://example.com/callback", job.Callback)
-	var jobRecord entity.Job
-	db := manager.Module.Sql.Db
-	db.First(&jobRecord)
-	// Make sure everything is up to date
-	assert.Equal(jobRecord.Name, job.Name)
-	assert.Equal(jobRecord.Description, job.Description)
-	assert.Equal(jobRecord.Type, job.Type)
-	assert.Equal(jobRecord.Callback, job.Callback)
 	return job
 }
 
-func GetAllJobs(assert *assert.Assertions, manager JobManager) ([] entity.Job) {
-	db := manager.Module.Sql.Db
-	var jobs []entity.Job
-	db.Select("*").Find(&jobs)
-	return jobs
-}
-
-func GetJob(assert *assert.Assertions, manager JobManager, jobId int) (entity.Job) {
-	var job entity.Job
-	return job
-}
-
+/*
 func PartlyUpdateJob(assert *assert.Assertions, manager JobManager, jobId int) (entity.Job) {
-	var db entity.Job
-	
+	var db entity.Job	
 	job.Name = ""
 	db.Save(&user)
 	return job
-}
+}*/
 
-func UpdateJob(assert *assert.Assertions, manager JobManager, job entity.Job) (entity.Job) {
-	var job entity.Job
+func UpdateJob(assert *assert.Assertions, manager JobManager, jobId int) (entity.Job) {
+	data := entity.JobApi {
+		Name: "send_notification",
+		Description: "Send Notification to Facebook",
+		Type: "api_call2",
+		Callback: "http://example.com/callback2",
+	}
+	job, err := manager.Update(jobId, data)
+	assert.Equal(true, err == nil)
+	assert.Equal("send_notification", job.Name)
+	assert.Equal("Send Notification to Facebook", job.Description)
+	assert.Equal("api_call2", job.Type)
+	assert.Equal("http://example.com/callback2", job.Callback)
 	return job
 }
 
-func DeleteJob(assert *assert.Assertions, manager JobManager, job entity.Job) (entity.Job) {
-	var job entity.Job
-	return job
+func DeleteJob(assert *assert.Assertions, manager JobManager, job1Id int, job2Id int) {
+	err := manager.Delete(job1Id)
+	assert.Equal(true, err == nil)
+	err = manager.Delete(job2Id)
+	assert.Equal(true, err == nil)
+	jobs, err := manager.GetAll()
+	assert.Equal(true, err == nil)
+	// Count number of job
+	assert.Equal(0, len(jobs))
 }

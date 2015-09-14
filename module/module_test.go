@@ -31,11 +31,28 @@ package module
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
+	"os"
 )
 
-func TestModule(t *testing.T) {
+func TestModuleConfig(t *testing.T) {
 	assert := assert.New(t)
 	assert.Equal("test", "test")
-	//assert.Equal("localhost:6379", module.Redis.Server)
-	//assert.Equal("/tmp/ant-worker.db", module.Sql.File)
+	module := Module {}
+	pwd := os.Getenv("PWD")
+	configFile := pwd + "/../test.conf"
+	_, err := os.Stat(configFile)
+	module.Load(configFile)
+	assert.Nil(err)
+	assert.Equal("user", module.Config.User)
+	assert.Equal("password", module.Config.Password)
+	assert.Equal("ant-worker", module.Config.Name)
+	assert.Equal("Simple job service", module.Config.Description)
+	assert.Equal("0.0.0.0", module.Config.Bind)
+	assert.Equal(2468, module.Config.Port)
+	assert.Equal(5, module.Config.JobConcurrency)
+	assert.Equal(5, module.Config.MaxWorker)
+	assert.Equal(5, module.Config.MemoryLimit)
+	assert.Equal("127.0.0.1", module.Config.RedisHost)
+	assert.Equal(6379, module.Config.RedisPort)
+	assert.Equal("/tmp/ant-worker", module.Config.DatabasePath)
 }
