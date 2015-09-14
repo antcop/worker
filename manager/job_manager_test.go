@@ -62,7 +62,7 @@ func TestJobCrudCycle(t *testing.T) {
 	jobs := GetAllJobs(assert, manager)
 	assert.Equal(2, len(jobs))
 	// Partly update job
-	//jobs := GetAllJobs(assert, manager)
+	job := UpdateJob(assert, manager, job.Id)
 	//assert.Equal(2, len(jobs))
 	// Update job
 	//jobs := GetAllJobs(assert, manager)
@@ -117,22 +117,25 @@ func GetAllJobs(assert *assert.Assertions, manager JobManager) ([] entity.Job) {
 	return jobs
 }
 
-func GetJob(assert *assert.Assertions, manager JobManager) (entity.Job) {
+func GetJob(assert *assert.Assertions, manager JobManager, jobId int) (entity.Job) {
 	var job entity.Job
 	return job
 }
 
-func PartlyUpdateJob(assert *assert.Assertions, manager JobManager) (entity.Job) {
+func PartlyUpdateJob(assert *assert.Assertions, manager JobManager, jobId int) (entity.Job) {
+	var db entity.Job
+	
+	job.Name = ""
+	db.Save(&user)
+	return job
+}
+
+func UpdateJob(assert *assert.Assertions, manager JobManager, job entity.Job) (entity.Job) {
 	var job entity.Job
 	return job
 }
 
-func UpdateJob(assert *assert.Assertions, manager JobManager) (entity.Job) {
-	var job entity.Job
-	return job
-}
-
-func DeleteJob(assert *assert.Assertions, manager JobManager) (entity.Job) {
+func DeleteJob(assert *assert.Assertions, manager JobManager, job entity.Job) (entity.Job) {
 	var job entity.Job
 	return job
 }

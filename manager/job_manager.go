@@ -43,7 +43,6 @@ type JobManager struct {
 
 func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
 	db := manager.Module.Sql.Db
-	
 	job := entity.Job {
 		Name: data.Name,
 		Description: data.Description,
@@ -66,35 +65,34 @@ func( manager *JobManager ) Get(data entity.JobApi) (entity.Job, error) {
 	//db := manager.Module.Sql.Db
 	//db.Create(&job)
 	//manager.ProcessJob( job )
-	job := entity.Job {
-	}
+	db.Select("*").Where("id = ?", jobId).Find(&jobs)
 	return job, nil
 }
 
 func( manager *JobManager ) Update(data entity.JobApi) (entity.Job, error) {
-	//db := manager.Module.Sql.Db
-	//db.Create(&job)
-	//manager.ProcessJob( job )
-	job := entity.Job {
-	}
+	var job entity.Job
+	db := manager.Module.Sql.Db
+	db.Select("*").Where("id = ?", data.Id).Find(&jobs)
+
+	job.Name = data.Name
+	job.Description = data.Description
+	job.Type = data.Type
+	job.Callback = data.Callback
+	
+	db.Save(&job)
 	return job, nil
 }
 
 func( manager *JobManager ) ParlyUpdate(data entity.JobApi) (entity.Job, error) {
-	//db := manager.Module.Sql.Db
-	//db.Create(&job)
-	//manager.ProcessJob( job )
-	job := entity.Job {
-	}
+	
 	return job, nil
 }
 
-func (manager *JobManager) Delete(data entity.JobApi) (entity.Job, error) {
-	// Stop job
-	// Delete job
-	job := entity.Job {
-	}
-	return job, nil
+func (manager *JobManager) Delete(jobId int) error {
+	var job entity.Job
+	db := manager.Module.Sql.Db
+	db.Where("id = ?", jobId).Delete(&job)
+	return nil
 }
 
 func (manager *JobManager) Start(data entity.JobApi)  (entity.Job, error) {

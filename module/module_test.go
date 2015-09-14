@@ -35,10 +35,6 @@ import (
 
 func TestModule(t *testing.T) {
 	assert := assert.New(t)
-	module := Module {
-		//Config: config
-	}
-	module.Load()
 	assert.Equal("test", "test")
 	//assert.Equal("localhost:6379", module.Redis.Server)
 	//assert.Equal("/tmp/ant-worker.db", module.Sql.File)
