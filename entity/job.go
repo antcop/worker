@@ -53,14 +53,14 @@ type Workload struct {
 }
 
 type Job struct {
-	Id int
+	Id uint `gorm:"primary_key"' sql:"AUTO_INCREMENT"`
 	Name string
 	Type string
 	Description string
 	Callback string
 	Status int
 	Progress int
-	EndPoint EndPoint `gorm:"many2many:job_endpoint;"`
-	Params string
-	Workload []Workload `gorm:"many2many:job_workloads;"`
+	//EndPoint EndPoint `gorm:"many2many:job_endpoint;"`
+	//Params string
+	//Workload []Workload `gorm:"many2many:job_workloads;"`
 }

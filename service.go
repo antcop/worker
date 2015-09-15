@@ -33,6 +33,7 @@ import (
 	"github.com/epinion-online-research/ant-worker/api"
 	. "github.com/epinion-online-research/ant-worker/module/daemon"
 	. "github.com/epinion-online-research/ant-worker/module"
+	"path/filepath"
 )
 
 func startService(daemon Daemon) {
@@ -53,7 +54,8 @@ func main() {
 	manager := Manager {}
 	module := Module {}
 	// Loading standard modules
-	module.Load("/etc/init/ant-worker.conf")
+	configPath, _ := filepath.Abs("./ant-worker.conf")
+	module.Load(configPath)
 	// Inject modules for managers can access global resources
 	manager.Job = JobManager {
 		Module: module,

@@ -36,34 +36,16 @@ import (
 	 "os"
 )
 
-func TestJobCrudCycle(t *testing.T) {
-	assert := assert.New(t)
-	// Setup module
+func GetJobManager(assert *assert.Assertions) JobManager {
 	module := Module {}
 	pwd := os.Getenv("PWD")
 	configFile := pwd + "/../test.conf"
 	_, err := os.Stat(configFile)
 	assert.Nil(err)
 	module.Load(configFile)
-	manager := JobManager {
+	return JobManager {
 		Module: module,
 	}
-	// Setup job table
-	SetupJob(assert, manager)
-	// Create first job
-	job1 := CreateJob(assert, manager)
-	// Create second job
-	job2 := CreateJob(assert, manager)
-	// Get all jobs
-	GetAllJobs(assert, manager)
-	// Get job1
-	GetJob(assert, manager, job1.Id)
-	// Partly update job 1
-	UpdateJob(assert, manager, job1.Id)
-	// Delete 2 jobs
-	DeleteJob(assert, manager, job1.Id, job2.Id)
-	// Teardown job
-	TeardownJob(assert, manager)
 }
 
 func SetupJob(assert *assert.Assertions, manager JobManager) {
@@ -77,6 +59,30 @@ func SetupJob(assert *assert.Assertions, manager JobManager) {
 func TeardownJob(assert *assert.Assertions, manager JobManager) {
 	db := manager.Module.Sql.Db
 	db.DropTable(&entity.Job{})
+	db.Close()
+}
+
+func TestJobCrudCycle(t *testing.T) {
+	assert := assert.New(t)
+	// Job Manager
+	manager := GetJobManager(assert)
+	// Setup job table
+	SetupJob(assert, manager)
+	// Create first job
+	job1 := CreateJob(assert, manager)
+	// Create second job
+	job2 := CreateJob(assert, manager)
+	// Get all jobs
+	GetAllJobs(assert, manager)
+	// Get job1
+	GetJob(assert, manager, int(job1.Id))
+	GetJob(assert, manager, int(job2.Id))
+	// Partly update job 1
+	UpdateJob(assert, manager, int(job1.Id))
+	// Delete 2 jobs
+	DeleteJob(assert, manager, int(job1.Id), int(job2.Id))
+	// Teardown job
+	TeardownJob(assert, manager)
 }
 
 func CreateJob(assert *assert.Assertions, manager JobManager) (*entity.Job) {
@@ -89,6 +95,7 @@ func CreateJob(assert *assert.Assertions, manager JobManager) (*entity.Job) {
 	job, err := manager.Create(data)
 	// There is no error
 	assert.Equal(true, err == nil)
+	assert.Equal(true, job.Id > 0)
 	return job
 }
 

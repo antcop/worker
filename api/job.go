@@ -34,13 +34,14 @@ import (
 	"github.com/epinion-online-research/ant-worker/entity"
 	//. "github.com/epinion-online-research/ant-worker/util"
 	"strconv"
+	"fmt"
 	"net/http"
 )
 
 const MaxListJob int = 20
 
 type JobHandler struct {
-	job manager.JobManager
+	Job manager.JobManager
 }
 
 // GET /test
@@ -52,15 +53,16 @@ func (handler JobHandler) Test(context *gin.Context) {
 func (handler JobHandler) Create(context *gin.Context) {
 	var jobData entity.JobApi
 	if context.BindJSON(&jobData) == nil {
-		job, err := handler.job.Create(jobData)
-		if err != nil {
-			handler.Error(context, http.StatusOK, 1200, "Internal Server Error")
+		fmt.Println(jobData)
+		job, err := handler.Job.Create(jobData)
+		if err == nil {
+			context.JSON(http.StatusOK, gin.H {
+				"id": job.Id,
+				"location": "http://localhost/api/job/v1/" + strconv.Itoa(int(job.Id)),
+			})
 			return
 		}
-		context.JSON(http.StatusOK, gin.H {
-			"id": job.Id,
-			"location": "http://localhost/api/job/v1/" + strconv.Itoa(job.Id),
-		})
+		handler.Error(context, http.StatusOK, 1200, "Internal Server Error")
 		return
 	}
 	handler.Error(context, http.StatusOK, 1200, "Invalid json format")
@@ -68,6 +70,16 @@ func (handler JobHandler) Create(context *gin.Context) {
 
 // GET /api/v1/job
 func (handler JobHandler) GetAll(context *gin.Context ) {
+	handler.Job.GetAll()
+	/*
+	if err != nil {
+		handler.Error(context, http.StatusOK, 1200, "Internal Server Error")
+		return
+	}*/
+	context.JSON(http.StatusOK, gin.H {
+		"status": "OK",
+	})
+	/*
 	jobs, err := handler.job.GetAll()
 	if err != nil {
 		handler.Error(context, http.StatusOK, 1200, "Internal Server Error")
@@ -83,6 +95,7 @@ func (handler JobHandler) GetAll(context *gin.Context ) {
 		})
 	}
 	context.JSON(http.StatusOK, listJob)
+	*/
 }
 
 // GET /api/v1/job/:id

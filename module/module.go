@@ -66,7 +66,10 @@ func getIntValue(data map[string] string, key string, defaultValue int) int {
 func LoadConfig(configPath string) Config {
 	data := make(map[string] string)
 	if _, err := os.Stat(configPath); err == nil {
-		cfg.Load(configPath, data)
+		err = cfg.Load(configPath, data)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	return Config {
 		User:           getStrValue(data, "username", "user"),
@@ -80,7 +83,7 @@ func LoadConfig(configPath string) Config {
 		MemoryLimit:    getIntValue(data, "memory_limit", 5),
 		RedisHost:      getStrValue(data, "redis_host", "127.0.0.1"),
 		RedisPort:      getIntValue(data, "redis_port", 6379),
-		DatabasePath:   getStrValue(data, "db_path", "/tmp/" + getStrValue(data, "name", "ant-worker")),
+		DatabasePath:   getStrValue(data, "database_path", "/tmp/test.db"), // + getStrValue(data, "name", "ant-worker")),
 	}
 }
 

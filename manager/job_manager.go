@@ -31,9 +31,8 @@ package manager
 import (
 	"github.com/epinion-online-research/ant-worker/entity"
 	. "github.com/epinion-online-research/ant-worker/module"
+	"fmt"
 )
-
-type Json map[string] interface {}
 
 type JobManager struct {
 	Observer chan string
@@ -60,7 +59,11 @@ func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
 		Callback: data.Callback,
 		Status: STATUS_CREATED,
 	}
-	db.Create(&job)
+	err := db.Create(&job)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("CREATED ", job.Id)
 	return &job, nil
 }
 

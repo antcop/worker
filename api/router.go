@@ -47,6 +47,7 @@ func (router *Router ) Init (rest *Rest) {
 	router.rest = rest
 	router.manager = rest.Manager
 }
+
 /*
 type Json struct {
 	User     string `form:"user" json:"user" binding:"required"`
@@ -55,7 +56,7 @@ type Json struct {
 
 func (router *Router) RegisterJobs( ) {
 	job := JobHandler {
-		job: router.manager.Job,
+		Job: router.manager.Job,
 	}
 	// Example
 	router.engine.GET("/api/v1/test", job.Test)

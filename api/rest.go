@@ -38,7 +38,7 @@ type Rest struct {
 	Manager Manager
 }
 
-func (rest *Rest) Start(){
+func (rest *Rest) Start() {
 	router := Router{}
 	router.Init(rest)
 	router.RegisterJobs()

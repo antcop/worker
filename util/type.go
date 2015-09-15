@@ -31,6 +31,7 @@ package util
 import (
 	"io"
 	"encoding/json"
+	"strconv"
 )
 
 type Json map[string] interface {}
@@ -41,4 +42,8 @@ func ToJson(data io.Reader) Json {
 	var json Json
 	decoder.Decode(&json)
 	return json
+}
+
+func Uint2Str(number uint) string {
+	return strconv.FormatUint(uint64(number), 10)
 }
