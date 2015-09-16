@@ -34,7 +34,6 @@ import (
 	"github.com/epinion-online-research/ant-worker/entity"
 	//. "github.com/epinion-online-research/ant-worker/util"
 	"strconv"
-	"fmt"
 	"net/http"
 )
 
@@ -53,7 +52,6 @@ func (handler JobHandler) Test(context *gin.Context) {
 func (handler JobHandler) Create(context *gin.Context) {
 	var jobData entity.JobApi
 	if context.BindJSON(&jobData) == nil {
-		fmt.Println(jobData)
 		job, err := handler.Job.Create(jobData)
 		if err == nil {
 			context.JSON(http.StatusOK, gin.H {

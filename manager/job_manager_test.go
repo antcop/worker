@@ -59,13 +59,13 @@ func SetupJob(assert *assert.Assertions, manager JobManager) {
 func TeardownJob(assert *assert.Assertions, manager JobManager) {
 	db := manager.Module.Sql.Db
 	db.DropTable(&entity.Job{})
-	db.Close()
 }
 
 func TestJobCrudCycle(t *testing.T) {
 	assert := assert.New(t)
 	// Job Manager
 	manager := GetJobManager(assert)
+	defer manager.Module.Sql.Db.Close()
 	// Setup job table
 	SetupJob(assert, manager)
 	// Create first job
@@ -108,6 +108,7 @@ func GetAllJobs(assert *assert.Assertions, manager JobManager) [] entity.Job {
 }
 
 func GetJob(assert *assert.Assertions, manager JobManager, jobId int) entity.Job {
+	assert.Equal(true, jobId > 0)
 	job, err := manager.Get(jobId)
 	assert.Equal(true, err == nil)
 	assert.Equal("sendmail", job.Name)
@@ -126,6 +127,7 @@ func PartlyUpdateJob(assert *assert.Assertions, manager JobManager, jobId int) (
 }*/
 
 func UpdateJob(assert *assert.Assertions, manager JobManager, jobId int) (entity.Job) {
+	assert.Equal(true, jobId > 0)
 	data := entity.JobApi {
 		Name: "send_notification",
 		Description: "Send Notification to Facebook",
@@ -142,6 +144,8 @@ func UpdateJob(assert *assert.Assertions, manager JobManager, jobId int) (entity
 }
 
 func DeleteJob(assert *assert.Assertions, manager JobManager, job1Id int, job2Id int) {
+	assert.Equal(true, job1Id > 0)
+	assert.Equal(true, job2Id > 0)
 	err := manager.Delete(job1Id)
 	assert.Equal(true, err == nil)
 	err = manager.Delete(job2Id)
