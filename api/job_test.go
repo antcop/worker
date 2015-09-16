@@ -124,7 +124,7 @@ func ApiTestJob(assert *assert.Assertions, handler JobHandler) {
 	router.GET("/api/v1/test", handler.Test)
 	response := makeMockupRequest("GET", "/api/v1/test", Json {})
 	assert.NotNil(response)
-	data := ToJson(response.Body)
+	data := ToJsonObject(response.Body)
 	assert.NotNil(data)
 	status := data["status"].(bool)
 	assert.Equal(true, status)
@@ -140,7 +140,7 @@ func ApiCreateJob(assert *assert.Assertions, handler JobHandler) {
 		"callback": "http://google.com",
 	})
 	assert.NotNil(response)
-	data := ToJson(response.Body)
+	data := ToJsonObject(response.Body)
 	assert.NotNil(data)
 	id := data["id"].(int)
 	assert.Equal(true, id > 0)
@@ -151,11 +151,14 @@ func ApiGetAllJobs(assert *assert.Assertions, handler JobHandler) {
 	router.GET("/api/v1/job", handler.GetAll)
 	response := makeMockupRequest("GET", "/api/v1/job", Json {})
 	assert.NotNil(response)
-	data := ToJson(response.Body)
+	log.Fatal(response.Body)
+	data := ToJsonArray(response.Body)
 	assert.NotNil(data)
-	log.Fatal(data)
-	//status := data["status"].(bool)
-	//assert.Equal(true, status)
+	assert.Equal(3, len(data))
+	for i:=0; i<len(data); i++ {
+		row := data[i]
+		assert.Equal("sendsms", row["name"].(string))
+	}
 }
 
 /*

@@ -36,10 +36,18 @@ import (
 
 type Json map[string] interface {}
 
-// Convert string to JSON type
-func ToJson(data io.Reader) Json {
+// Convert string to JSON Object type
+func ToJsonObject(data io.Reader) Json {
 	decoder := json.NewDecoder(data)
 	var json Json
+	decoder.Decode(&json)
+	return json
+}
+
+// Convert string to JSON Array type
+func ToJsonArray(data io.Reader) []Json {
+	decoder := json.NewDecoder(data)
+	var json []Json
 	decoder.Decode(&json)
 	return json
 }
