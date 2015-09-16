@@ -49,7 +49,7 @@ const STATUS_FINISHED int = 6;
 const PROGRESS_START  int = 1;
 const PROGRESS_DONE   int = 2;
 
-func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
+func (manager *JobManager) Create(data entity.JobApi) (entity.Job, error) {
 	db := manager.Module.Sql.Db
 	job := entity.Job {
 		Name: data.Name,
@@ -59,7 +59,7 @@ func (manager *JobManager) Create(data entity.JobApi) (*entity.Job, error) {
 		Status: STATUS_CREATED,
 	}
 	db.Create(&job)
-	return &job, nil
+	return job, nil
 }
 
 func( manager *JobManager ) GetAll() ([]entity.Job, error) {

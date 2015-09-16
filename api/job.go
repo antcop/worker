@@ -68,32 +68,21 @@ func (handler JobHandler) Create(context *gin.Context) {
 
 // GET /api/v1/job
 func (handler JobHandler) GetAll(context *gin.Context ) {
-	handler.Job.GetAll()
-	/*
-	if err != nil {
-		handler.Error(context, http.StatusOK, 1200, "Internal Server Error")
-		return
-	}*/
-	context.JSON(http.StatusOK, gin.H {
-		"status": "OK",
-	})
-	/*
-	jobs, err := handler.job.GetAll()
+	jobs, err := handler.Job.GetAll()
 	if err != nil {
 		handler.Error(context, http.StatusOK, 1200, "Internal Server Error")
 		return
 	}
-	listJob := make([]gin.H, 20)
+	var listJob []gin.H
 	for i:=0; i<len(jobs); i++ {
 		job := jobs[i]
 		listJob = append(listJob, gin.H {
 			"id": job.Id,
 			"name": job.Name,
-			"location": "http://localhost/api/job/v1/" + strconv.Itoa(job.Id),
+			"location": "http://localhost/api/job/v1/" + strconv.Itoa(int(job.Id)),
 		})
 	}
 	context.JSON(http.StatusOK, listJob)
-	*/
 }
 
 // GET /api/v1/job/:id

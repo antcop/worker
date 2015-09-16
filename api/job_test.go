@@ -40,17 +40,14 @@ import (
 	"net/http/httptest"
 	"encoding/json"
 	//"fmt"
-	"log"
+	//"log"
 	"bytes"
+	"strconv"
 	"os"
 )
 
-// END POINT TESTING
-
-var router = gin.Default()
-
 // Create mockup HTTP Request
-func makeMockupRequest(method, url string, data Json) *httptest.ResponseRecorder {
+func makeMockupRequest(router *gin.Engine, method, url string, data Json) *httptest.ResponseRecorder {
 	query, _ := json.Marshal(data)
 	request, _ := http.NewRequest(method, url, bytes.NewBuffer(query))
 	request.Header.Set("Content-Type", "application/json")
@@ -82,6 +79,7 @@ func SetupJob(assert *assert.Assertions, manager JobManager) {
 func TeardownJob(assert *assert.Assertions, manager JobManager) {
 	db := manager.Module.Sql.Db
 	db.DropTable(&entity.Job{})
+	db.Close()
 }
 
 func GetJobHandler(manager JobManager) JobHandler {
@@ -91,11 +89,9 @@ func GetJobHandler(manager JobManager) JobHandler {
 }
 
 func TestJobCrudApi(t *testing.T) {
-	return
 	assert := assert.New(t)
 	// Job Manager
 	manager := GetJobManager(assert)
-	defer manager.Module.Sql.Db.Close()
 	// Job Handler
 	handler := GetJobHandler(manager)
 	// Setup job
@@ -103,26 +99,33 @@ func TestJobCrudApi(t *testing.T) {
 	// Test Api
 	ApiTestJob(assert, handler)
 	// Create three jobs
-	ApiCreateJob(assert, handler)
-	ApiCreateJob(assert, handler)
-	ApiCreateJob(assert, handler)
+	jobId1 := ApiCreateJob(assert, handler)
+	jobId2 := ApiCreateJob(assert, handler)
+	jobId3 := ApiCreateJob(assert, handler)
+	assert.Equal(1, jobId1)
+	assert.Equal(2, jobId2)
+	assert.Equal(3, jobId3)
+	// Get job
+	ApiGetJob(assert, handler, jobId1)
+	ApiGetJob(assert, handler, jobId2)
+	ApiGetJob(assert, handler, jobId3)
 	// Get all jobs
 	ApiGetAllJobs(assert, handler)
-	// Get job1
-	//GetJobApi(assert, handler, int(job1.Id))
-	//GetJobApi(assert, handler, int(job2.Id))
-	// Partly update job 1
-	//UpdateJobApi(assert, handler, int(job1.Id))
+	// Update job
+	UpdateJobApi(assert, handler, jobId1)
 	// Delete 2 jobs
-	//DeleteJobApi(assert, handler, int(job1.Id), int(job2.Id))
-	// Teardown job
+	DeleteJobApi(assert, handler, jobId1)
+	DeleteJobApi(assert, handler, jobId2)
+	DeleteJobApi(assert, handler, jobId3)
+	// Teardown
 	TeardownJob(assert, manager)
 }
 
 // TEST api/v1/test
 func ApiTestJob(assert *assert.Assertions, handler JobHandler) {
+	var router = gin.Default()
 	router.GET("/api/v1/test", handler.Test)
-	response := makeMockupRequest("GET", "/api/v1/test", Json {})
+	response := makeMockupRequest(router, "GET", "/api/v1/test", Json {})
 	assert.NotNil(response)
 	data := ToJsonObject(response.Body)
 	assert.NotNil(data)
@@ -131,9 +134,10 @@ func ApiTestJob(assert *assert.Assertions, handler JobHandler) {
 }
 
 // POST api/v1/job
-func ApiCreateJob(assert *assert.Assertions, handler JobHandler) {
+func ApiCreateJob(assert *assert.Assertions, handler JobHandler) int {
+	var router = gin.Default()
 	router.POST("/api/v1/job", handler.Create)
-	response := makeMockupRequest("POST", "/api/v1/job", Json {
+	response := makeMockupRequest(router, "POST", "/api/v1/job", Json {
 		"name": "sendsms",
 		"description": "Send SMS Message",
 		"type": "api_call",
@@ -142,16 +146,17 @@ func ApiCreateJob(assert *assert.Assertions, handler JobHandler) {
 	assert.NotNil(response)
 	data := ToJsonObject(response.Body)
 	assert.NotNil(data)
-	id := data["id"].(int)
+	id := data["id"].(float64)
 	assert.Equal(true, id > 0)
+	return int(id)
 }
 
 // GET api/v1/job
 func ApiGetAllJobs(assert *assert.Assertions, handler JobHandler) {
+	var router = gin.Default()
 	router.GET("/api/v1/job", handler.GetAll)
-	response := makeMockupRequest("GET", "/api/v1/job", Json {})
+	response := makeMockupRequest(router, "GET", "/api/v1/job", Json {})
 	assert.NotNil(response)
-	log.Fatal(response.Body)
 	data := ToJsonArray(response.Body)
 	assert.NotNil(data)
 	assert.Equal(3, len(data))
@@ -161,63 +166,33 @@ func ApiGetAllJobs(assert *assert.Assertions, handler JobHandler) {
 	}
 }
 
-/*
 // GET api/v1/job/:id
-func TestGetJob(t *testing.T) {
-	assert := assert.New(t)
-	handler := JobHandler {
-		//Job: getJobManager(assert),
-	}
+func ApiGetJob(assert *assert.Assertions, handler JobHandler, jobId int) {
+	var router = gin.Default()
 	router.GET("/api/v1/job/:id", handler.Get)
-	response := makeMockupRequest("GET", "/api/v1/job/1234", Json {})
+	response := makeMockupRequest(router, "GET", "/api/v1/job/" + strconv.Itoa(jobId), Json {})
 	assert.NotNil(response)
-	data := ToJson(response.Body)
+	data := ToJsonObject(response.Body)
 	assert.NotNil(data)
-	key := data["key"]
-	assert.Equal("1234", key)
 }
 
 // PUT api/v1/job/:id
-func TestUpdateJob(t *testing.T) {
-	assert := assert.New(t)
-	handler := JobHandler {
-		//Job: getJobManager(assert),
-	}
+func ApiUpdateJob(assert *assert.Assertions, handler JobHandler, jobId int) {
 	router.PUT("/api/v1/job/:id", handler.Update)
-	response := makeMockupRequest("PUT", "/api/v1/job/1234", Json {})
+	response := makeMockupRequest("PUT", "/api/v1/job/" + strconv.Itoa(jobId),
+	Json {
+		"name" : "sendsms",
+	})
 	assert.NotNil(response)
 	data := ToJson(response.Body)
 	assert.NotNil(data)
-	key := data["key"]
-	assert.Equal("1234", key)
-}
-
-// PATCH api/v1/job/:id
-func TestParlyUpdateJob(t *testing.T) {
-	assert := assert.New(t)
-	handler := JobHandler {
-		//Job: getJobManager(assert),
-	}
-	router.PATCH("/api/v1/job/:id", handler.PartlyUpdate)
-	response := makeMockupRequest("PATCH", "/api/v1/job/1234", Json {})
-	assert.NotNil(response)
-	data := ToJson(response.Body)
-	assert.NotNil(data)
-	key := data["key"]
-	assert.Equal("1234", key)
 }
 
 // DELETE api/v1/job/:id
-func TestDeleteJob(t *testing.T) {
-	assert := assert.New(t)
-	handler := JobHandler {
-		Job: getJobManager(assert),
-	}
+func ApiDeleteJob(assert *assert.Assertions, handler JobHandler, jobId int) {
 	router.DELETE("/api/v1/job/:id", handler.PartlyUpdate)
-	response := makeMockupRequest("DELETE", "/api/v1/job/1234", Json {})
+	response := makeMockupRequest("DELETE", "/api/v1/job/" + strconv.Itoa(jobId), Json {})
 	assert.NotNil(response)
 	data := ToJson(response.Body)
 	assert.NotNil(data)
-	key := data["key"]
-	assert.Equal("1234", key)
-}*/
+}
