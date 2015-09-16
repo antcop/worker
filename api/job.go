@@ -87,25 +87,61 @@ func (handler JobHandler) GetAll(context *gin.Context ) {
 
 // GET /api/v1/job/:id
 func (handler JobHandler) Get(context *gin.Context) {
-	context.JSON(200, gin.H {
-		"key" : context.Param("id"),
-		"name" : " Do some thing",
-		"status": 1,
-		"progress": 90,
-		"estimate": 25,
-	})
+	jobId, err := strconv.Atoi(context.Param("id"))
+	if err == nil {
+		job, err := handler.Job.Get(jobId)
+		if err == nil {
+			context.JSON(200, gin.H {
+				"id" : jobId,
+				"name" : job.Name,
+				"description" : job.Description,
+				"type" : job.Type,
+				"status": job.Status,
+				"progress": job.Progress,
+			})
+		}
+		handler.Error(context, http.StatusOK, 1200, "Resource not found !")
+		return
+	}
+	handler.Error(context, http.StatusOK, 1200, "Invalid resource id !")
 }
 
 func (handler JobHandler) Update(context *gin.Context) {
-	context.JSON(200, gin.H {
-		"key" : context.Param("id"),
-		"name" : " Do some thing",
-		"status": 1,
-		"progress": 90,
-		"estimate": 25,
-	})
+	jobId, err := strconv.Atoi(context.Param("id"))
+	if err == nil {
+		var jobData entity.JobApi
+		if context.BindJSON(&jobData) == nil {
+			_, err := handler.Job.Update(jobId, jobData)
+			if err == nil {
+				context.JSON(http.StatusOK, gin.H {
+					"status": true,
+				})
+				return
+			}
+			handler.Error(context, http.StatusOK, 1200, "Resource not found !")
+			return
+		}
+	}
+	handler.Error(context, http.StatusOK, 1200, "Invalid resource id !")
 }
 
+func (handler JobHandler) Delete(context *gin.Context) {
+	jobId, err := strconv.Atoi(context.Param("id"))
+	if err == nil {
+		err = handler.Job.Delete(jobId)
+		if err == nil {
+			context.JSON(http.StatusOK, gin.H {
+			"status": true,
+			})
+			return
+		}
+		handler.Error(context, http.StatusOK, 1200, "Resource not found !")
+		return
+	}
+	handler.Error(context, http.StatusOK, 1200, "Invalid resource id !")
+}
+
+/*
 func (handler JobHandler) PartlyUpdate(context *gin.Context) {
 	context.JSON(200, gin.H {
 		"key" : context.Param("id"),
@@ -114,13 +150,7 @@ func (handler JobHandler) PartlyUpdate(context *gin.Context) {
 		"progress": 90,
 		"estimate": 25,
 	})
-}
-
-func (handler JobHandler) Delete(context *gin.Context) {
-	context.JSON(200, gin.H {
-		"status": true,
-	})
-}
+}*/
 
 func (handler JobHandler) Error(context *gin.Context, status int, code int, message string) {
 	context.JSON(http.StatusOK, gin.H {

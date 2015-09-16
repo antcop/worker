@@ -69,7 +69,7 @@ func (router *Router) RegisterJobs( ) {
 	// Update all fields for single resource
 	router.engine.PUT("/api/v1/job/:id", job.Update)
 	// Update one or some fields for single resource
-	router.engine.PATCH("/api/v1/job/:id", job.PartlyUpdate)
+	//router.engine.PATCH("/api/v1/job/:id", job.PartlyUpdate)
 	// Delete resource
 	router.engine.DELETE("/api/v1/job/:id", job.Delete)
 }

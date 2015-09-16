@@ -112,11 +112,13 @@ func TestJobCrudApi(t *testing.T) {
 	// Get all jobs
 	ApiGetAllJobs(assert, handler)
 	// Update job
-	UpdateJobApi(assert, handler, jobId1)
+	ApiUpdateJob(assert, handler, jobId1)
+	ApiUpdateJob(assert, handler, jobId2)
+	ApiUpdateJob(assert, handler, jobId3)
 	// Delete 2 jobs
-	DeleteJobApi(assert, handler, jobId1)
-	DeleteJobApi(assert, handler, jobId2)
-	DeleteJobApi(assert, handler, jobId3)
+	ApiDeleteJob(assert, handler, jobId1)
+	ApiDeleteJob(assert, handler, jobId2)
+	ApiDeleteJob(assert, handler, jobId3)
 	// Teardown
 	TeardownJob(assert, manager)
 }
@@ -163,36 +165,44 @@ func ApiGetAllJobs(assert *assert.Assertions, handler JobHandler) {
 	for i:=0; i<len(data); i++ {
 		row := data[i]
 		assert.Equal("sendsms", row["name"].(string))
+		assert.Equal("http://localhost/api/job/v1/" + strconv.Itoa(int(row["id"].(float64))), row["location"].(string))
 	}
 }
 
 // GET api/v1/job/:id
-func ApiGetJob(assert *assert.Assertions, handler JobHandler, jobId int) {
+func ApiGetJob(assert *assert.Assertions, handler JobHandler, jobId int) Json {
 	var router = gin.Default()
 	router.GET("/api/v1/job/:id", handler.Get)
 	response := makeMockupRequest(router, "GET", "/api/v1/job/" + strconv.Itoa(jobId), Json {})
 	assert.NotNil(response)
 	data := ToJsonObject(response.Body)
 	assert.NotNil(data)
+	return data
 }
 
 // PUT api/v1/job/:id
 func ApiUpdateJob(assert *assert.Assertions, handler JobHandler, jobId int) {
+	var router = gin.Default()
 	router.PUT("/api/v1/job/:id", handler.Update)
-	response := makeMockupRequest("PUT", "/api/v1/job/" + strconv.Itoa(jobId),
+	response := makeMockupRequest(router, "PUT", "/api/v1/job/" + strconv.Itoa(jobId),
 	Json {
-		"name" : "sendsms",
+		"name" : "testname",
 	})
 	assert.NotNil(response)
-	data := ToJson(response.Body)
+	data := ToJsonObject(response.Body)
 	assert.NotNil(data)
+	assert.Equal(true, data["status"].(bool))
+	// Verify resource
+	data = ApiGetJob(assert, handler, jobId)
+	assert.Equal("testname", data["name"].(string))
 }
 
 // DELETE api/v1/job/:id
 func ApiDeleteJob(assert *assert.Assertions, handler JobHandler, jobId int) {
-	router.DELETE("/api/v1/job/:id", handler.PartlyUpdate)
-	response := makeMockupRequest("DELETE", "/api/v1/job/" + strconv.Itoa(jobId), Json {})
+	var router = gin.Default()
+	router.DELETE("/api/v1/job/:id", handler.Delete)
+	response := makeMockupRequest(router, "DELETE", "/api/v1/job/" + strconv.Itoa(jobId), Json {})
 	assert.NotNil(response)
-	data := ToJson(response.Body)
+	data := ToJsonObject(response.Body)
 	assert.NotNil(data)
 }
